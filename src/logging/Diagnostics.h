@@ -21,12 +21,14 @@
 #include <spdlog/sinks/rotating_file_sink.h>
 #include "spdlog/spdlog.h"
 
+/*
 #define INFO(logger, ...)  logger->info(__FILE__ ## " line " ## SPDLOG_STR(__LINE__) ## ": " ## __VA_ARGS__);
 #define WARNING(logger, ...)  logger->warning(__FILE__ ## " line " ## SPDLOG_STR(__LINE__) ## ": " ## __VA_ARGS__);
 #define ERROR(logger, ...)  logger->error(__FILE__ ## " line " ## SPDLOG_STR(__LINE__) ## ": " ## __VA_ARGS__);
 #define FATAL(logger, ...)  logger->fatal(__FILE__ ## " line " ## SPDLOG_STR(__LINE__) ## ": " ## __VA_ARGS__);
 #define TRACE(logger, ...)  logger->trace(__FILE__ ## " line " ## SPDLOG_STR(__LINE__) ## ": " ## __VA_ARGS__);
 #define DEBUG(...)  spdlog::debug(__FILE__ ## " line " ## SPDLOG_STR(__LINE__) ## ": " ## __VA_ARGS__);
+*/
 
 namespace hare::logging {
 /// Diagnostic module for correct logging.

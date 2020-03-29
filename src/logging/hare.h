@@ -91,4 +91,6 @@ template <typename T>
 void fatal(const std::string_view log_format_message, T&& args...) noexcept;
 }
 
+#include "hare_templates.cc"
+
 #endif //HARE_SRC_LOGGING_HARE_H_
