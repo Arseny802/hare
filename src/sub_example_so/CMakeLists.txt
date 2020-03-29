@@ -14,7 +14,7 @@ include_directories(
 message("Including directory: ${CMAKE_SOURCE_DIR}")
 
 target_compile_definitions(${SOLUTION_NAME}.logging PRIVATE PROJECT_NAME="${PROJECT_NAME}")
-target_link_libraries(${PROJECT_NAME} PUBLIC ${SOLUTION_NAME}.logging)
+target_link_libraries(${PROJECT_NAME} PRIVATE ${SOLUTION_NAME}.logging)
 
 message("Including library: ${SOLUTION_NAME}.logging with PROJECT_NAME=${PROJECT_NAME}")
 message("")

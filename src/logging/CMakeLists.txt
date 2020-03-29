@@ -2,6 +2,9 @@ set(PROJECT_NAME ${SOLUTION_NAME}.logging)
 message(STATUS "Building ${PROJECT_NAME} started.")
 project(${PROJECT_NAME})
 
+set(CMAKE_POSITION_INDEPENDENT_CODE ON)
+add_compile_options(-fPIC)
+
 set(project_directories
         .)
 foreach (current_dir ${project_directories})
