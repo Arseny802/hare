@@ -6,8 +6,6 @@
 
 namespace hare {
 
-static logging::DiagnosticStaticInitialization diagnostic_static_initialization;
-
 void trace(const std::string_view log_message) noexcept {
   spdlog::trace(log_message);
 }

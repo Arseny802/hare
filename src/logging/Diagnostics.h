@@ -53,25 +53,34 @@ class Diagnostics {
   static void SetCurrentLogPattern(std::string_view new_pattern);
   /// Was Initialize() function called or not.
   static bool truncate_file_at_start;
+
  protected:
+#ifdef PROJECT_NAME
   /// Logger name (e.g. 'http_module' or 'ftp_module')
-  const static std::string logger_name;
+  static constexpr std::string_view logger_name = PROJECT_NAME;
   /// File name log to.
-  const static std::string log_file_name;
+  static constexpr std::string_view log_file_name = "logs/" PROJECT_NAME;
+#else
+  /// Logger name (e.g. 'http_module' or 'ftp_module')
+  static constexpr std::string_view logger_name =  "hare";
+  /// File name log to.
+  static constexpr std::string_view log_file_name = "logs/hare";
+#endif
   /// Default value for date formatting. Called if date_format is empty.
-  const static std::string default_date_format;
+  static constexpr std::string_view default_date_format = "[%c]";
   /// Default value for level formatting. Called if level_format is empty.
-  const static std::string default_level_format;
+  static constexpr std::string_view default_level_format = "[%l]";
   /// Format string for log level. May be empty.
-  const static std::optional<std::string> level_format;
+  static constexpr std::optional<std::string_view> level_format = "[%^%=4!l%$]";
   /// Format string for log datetime. May be empty.
-  const static std::optional<std::string> date_format;
+  static constexpr std::optional<std::string_view> date_format = "[%d/%m/%C %H:%M:%S.%F]";
+
  private:
   /// Was Initialize() function called or not.
   static bool initialized_;
   static std::mutex initialization_locker_;
   static spdlog::level::level_enum current_level_;
-  static std::string log_format_;
+  static std::string_view log_format_;
 };
 }
 

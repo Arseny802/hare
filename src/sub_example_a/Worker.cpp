@@ -39,7 +39,7 @@ bool Worker::VectorHasRepetitions(const std::vector<int> &data) const noexcept {
   hare::debug("Worker::SomeSetter() called.");
 
   for (int element : data) {
-    hare::trace("Got elevent '{}' in data.", element);
+    hare::trace("Got element '{}' in data.", element);
   }
   return false;
 }

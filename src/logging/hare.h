@@ -5,10 +5,10 @@
 #ifndef HARE_SRC_LOGGING_HARE_H_
 #define HARE_SRC_LOGGING_HARE_H_
 
-#include "Diagnostics.h"
 #include "DiagnosticStaticInitialization.h"
 
 namespace hare {
+static logging::DiagnosticStaticInitialization diagnostic_static_initialization;
 ///
 /// \param log_message
 void trace(const std::string_view log_message) noexcept;

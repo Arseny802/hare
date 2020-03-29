@@ -7,6 +7,7 @@
 
 #include <string>
 #include <vector>
+
 namespace sub_example_so {
 class Worker {
  public:

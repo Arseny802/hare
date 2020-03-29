@@ -4,29 +4,38 @@
 
 #include "Diagnostics.h"
 
-#include <utility>
-
 namespace hare::logging {
 
 #ifdef _DEBUG
 spdlog::level::level_enum Diagnostics::current_level_ = spdlog::level::debug;
-std::string Diagnostics::log_format_ = "{date} [thread %t] {level} [%n] %! %v";
+
+#ifdef PROJECT_NAME
+std::string_view Diagnostics::log_format_ = "{date} [thread %t] {level} [%n] %! %v";
+#else
+std::string_view Diagnostics::log_format_ = "{date} [thread %t] {level} %! %v";
+#endif
+
 #else
 #ifdef _RELEASE
 spdlog::level::level_enum Diagnostics::current_level_ = spdlog::level::info;
+
+#ifdef PROJECT_NAME
 std::string Diagnostics::log_format_ = "{date} [thread %t] {level} [%n] %v";
 #else
-spdlog::level::level_enum Diagnostics::current_level_ = spdlog::level::trace;
-std::string Diagnostics::log_format_ = "{date} [thread %t] {level} [%n] %! %v";
-#endif
+std::string Diagnostics::log_format_ = "{date} [thread %t] {level} %v";
 #endif
 
-const std::string Diagnostics::logger_name = PROJECT_NAME;
-const std::string Diagnostics::log_file_name = "logs/http";
-const std::string Diagnostics::default_date_format = "[%c]";
-const std::string Diagnostics::default_level_format = "[%l]";
-const std::optional<std::string> Diagnostics::level_format = "[%^%=4!l%$]";
-const std::optional<std::string> Diagnostics::date_format = "[%d/%m/%C %H:%M:%S.%F]";
+#else
+spdlog::level::level_enum Diagnostics::current_level_ = spdlog::level::trace;
+
+#ifdef PROJECT_NAME
+std::string Diagnostics::log_format_ = "{date} [thread %t] {level} [%n] %! %v";
+#else
+std::string Diagnostics::log_format_ = "{date} [thread %t] {level} %! %v";
+#endif
+
+#endif
+#endif
 
 std::mutex Diagnostics::initialization_locker_;
 bool Diagnostics::truncate_file_at_start = false;
@@ -56,7 +65,7 @@ void Diagnostics::Initialize() {
                                   fmt::arg("date", date_format.value_or(default_date_format)),
                                   fmt::arg("level", level_format.value_or(default_level_format)))
   );
-  spdlog::info("Initialized logger.");
+  spdlog::info("Initialized logger with name '{}'.", logger_name);
   initialized_ = true;
   initialization_locker_.unlock();
 }
