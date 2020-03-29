@@ -10,6 +10,9 @@
     <libraryRoots>
       <file path="$PROJECT_DIR$/third-party" />
     </libraryRoots>
+    <excludeRoots>
+      <file path="$PROJECT_DIR$/bin" />
+    </excludeRoots>
   </component>
   <component name="JavaScriptSettings">
     <option name="languageLevel" value="ES6" />
