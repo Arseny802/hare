@@ -14,9 +14,12 @@ foreach (current_dir ${project_directories})
     message("Adding sources from ${current_dir}: ${inner_sources}")
     set(files ${files} ${inner_headers} ${inner_sources})
 endforeach ()
-add_library(${PROJECT_NAME} STATIC ${files})
+set(logger_source_files ${files} PARENT_SCOPE)
+add_library(${PROJECT_NAME} STATIC EXCLUDE_FROM_ALL ${files})
 
-target_include_directories(${PROJECT_NAME} PUBLIC ${CMAKE_CURRENT_SOURCE_DIR})
+target_compile_definitions(${PROJECT_NAME} PRIVATE
+        -DPROJECT_NAME="${external_project_name}"
+        )
 
 target_compile_features(${PROJECT_NAME} PRIVATE cxx_std_17)
 
@@ -27,8 +30,18 @@ message("Including directory: ${CMAKE_CURRENT_SOURCE_DIR}")
 message("Linking private  library: fmt")
 message("Linking private  library: spdlog")
 
-message("PROJECT_NAME is ${PROJECT_NAME}")
-#add_compile_definitions(PROJECT_NAME="${PROJECT_NAME}")
+function(link_specific_logger external_project_name)
+    message(STATUS "Creating specific library for ${external_project_name} project.")
+    message("  Building library ${external_project_name}.logging")
+    message("Files: " ${files})
+    add_library(${external_project_name}.logging STATIC EXCLUDE_FROM_ALL ${logger_source_files})
+    target_compile_definitions(${external_project_name}.logging PRIVATE
+            -DPROJECT_NAME="${external_project_name}" # Specific definition
+            )
+    message("  Set PROJECT_NAME=${external_project_name}")
+    target_link_libraries(${external_project_name} PRIVATE ${external_project_name}.logging)
+    message(STATUS "Creating specific library for ${external_project_name} done.")
+endfunction()
 
 message(STATUS "Building ${PROJECT_NAME} finished.")
 message("")

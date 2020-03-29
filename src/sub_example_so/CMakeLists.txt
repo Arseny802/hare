@@ -4,7 +4,7 @@ project(${PROJECT_NAME})
 
 file(GLOB headers *.h)
 file(GLOB sources *.cpp)
-add_library(${PROJECT_NAME} STATIC ${headers} ${sources})
+add_library(${PROJECT_NAME} STATIC EXCLUDE_FROM_ALL ${headers} ${sources})
 message("Adding headers: ${headers}")
 message("Adding sources: ${sources}")
 
@@ -13,8 +13,5 @@ include_directories(
 )
 message("Including directory: ${CMAKE_SOURCE_DIR}")
 
-target_compile_definitions(${SOLUTION_NAME}.logging PRIVATE PROJECT_NAME="${PROJECT_NAME}")
-target_link_libraries(${PROJECT_NAME} PRIVATE ${SOLUTION_NAME}.logging)
-
-message("Including library: ${SOLUTION_NAME}.logging with PROJECT_NAME=${PROJECT_NAME}")
+link_specific_logger(${PROJECT_NAME})
 message("")
