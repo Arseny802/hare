@@ -10,7 +10,7 @@ namespace hare {
 /// Type for diagnostic level enumeration value.
 using level = uint8_t;
 /// Diagnostic levels, from 'fatal' (0) to 'trace' (6).
-enum levels : level {
+enum class levels : level {
   /// Highest level, error for program exit / restart.
   fatal = 0,
   /// Serious unexpected error, important to read.
@@ -26,7 +26,9 @@ enum levels : level {
   debug = 5,
   /// Lowest level, any helpful text for debug.
   /// May be similar with DEBUG message level.
-  trace = 6
+  trace = 6,
+  /// Disable logging at all.
+  off = 7
 };
 }
 #endif //HARE_SRC_LOGGING_DIAGNOSTICLEVELS_H_

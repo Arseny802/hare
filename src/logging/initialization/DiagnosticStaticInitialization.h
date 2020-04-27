@@ -6,14 +6,21 @@
 #define HARE_SRC_LOGGING_DIAGNOSTICSTATICINITIALIZATION_H_
 
 #include "Diagnostics.h"
-#include "hare.h"
+#include "../hare.h"
 namespace hare::logging {
 class DiagnosticStaticInitialization {
  public:
   DiagnosticStaticInitialization() {
-    Diagnostics::Initialize();
+    if (!IsInitialized()) {
+      IsInitialized() = true;
+      Diagnostics::Initialize();
+    }
   }
   ~DiagnosticStaticInitialization() = default;
+  static bool &IsInitialized() {
+    static bool initialized = false;
+    return initialized;
+  }
 };
 }
 #endif //HARE_SRC_LOGGING_DIAGNOSTICSTATICINITIALIZATION_H_

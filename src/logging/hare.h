@@ -5,7 +5,7 @@
 #ifndef HARE_SRC_LOGGING_HARE_H_
 #define HARE_SRC_LOGGING_HARE_H_
 
-#include "DiagnosticStaticInitialization.h"
+#include "initialization/DiagnosticStaticInitialization.h"
 
 namespace hare {
 static logging::DiagnosticStaticInitialization diagnostic_static_initialization;
@@ -39,58 +39,60 @@ void fatal(const std::string_view log_message) noexcept;
 /// \param args
 /// \param ...
 template <typename T>
-void trace(const std::string_view log_format_message, T&& args...) noexcept;
+void trace(const std::string_view log_format_message, const T& args...) noexcept;
 ///
 /// \tparam T
 /// \param log_format_message
 /// \param args
 /// \param ...
 template <typename T>
-void debug(const std::string_view log_format_message, T&& args...) noexcept;
+void debug(const std::string_view log_format_message, const T& args...) noexcept;
 ///
 /// \tparam T
 /// \param log_format_message
 /// \param args
 /// \param ...
 template <typename T>
-void info(const std::string_view log_format_message, T&& args...) noexcept;
+void info(const std::string_view log_format_message, const T& args...) noexcept;
 ///
 /// \tparam T
 /// \param log_format_message
 /// \param args
 /// \param ...
 template <typename T>
-void warn(const std::string_view log_format_message, T&& args...) noexcept;
+void warn(const std::string_view log_format_message, const T& args...) noexcept;
 ///
 /// \tparam T
 /// \param log_format_message
 /// \param args
 /// \param ...
 template <typename T>
-void warning(const std::string_view log_format_message, T&& args...) noexcept;
+void warning(const std::string_view log_format_message, const T& args...) noexcept;
 ///
 /// \tparam T
 /// \param log_format_message
 /// \param args
 /// \param ...
 template <typename T>
-void error(const std::string_view log_format_message, T&& args...) noexcept;
+void error(const std::string_view log_format_message, const T& args...) noexcept;
 ///
 /// \tparam T
 /// \param log_format_message
 /// \param args
 /// \param ...
 template <typename T>
-void critical(const std::string_view log_format_message, T&& args...) noexcept;
+void critical(const std::string_view log_format_message, const T& args...) noexcept;
 ///
 /// \tparam T
 /// \param log_format_message
 /// \param args
 /// \param ...
 template <typename T>
-void fatal(const std::string_view log_format_message, T&& args...) noexcept;
+void fatal(const std::string_view log_format_message, const T& args...) noexcept;
 }
 
-#include "hare_templates.cc"
+#include "hare.hpp"
+#include "../memory_tracer/MemoryTracer.h"
+#include "auto_trace/AutoTracer.h"
 
 #endif //HARE_SRC_LOGGING_HARE_H_

@@ -59,7 +59,7 @@ class Diagnostics {
   /// Logger name (e.g. 'http_module' or 'ftp_module')
   static constexpr std::string_view logger_name = PROJECT_NAME;
   /// File name log to.
-  static constexpr std::string_view log_file_name = "logs/" PROJECT_NAME;
+  static constexpr std::string_view log_file_name = "logs/" PROJECT_NAME ".log";
 #else
   /// Logger name (e.g. 'http_module' or 'ftp_module')
   static constexpr std::string_view logger_name =  "hare";
