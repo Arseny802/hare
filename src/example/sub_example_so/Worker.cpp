@@ -5,12 +5,12 @@
 #include <src/logging/hare.h>
 #include "Worker.h"
 
-namespace sub_example_a {
+namespace sub_example_so {
 
 const int Worker::kBytesToReserve = 128;
 
 Worker::Worker() {
-  hare::debug("Called Worker::Worker().");
+  AUTOLOG
   hare::debug("Allocating {} bytes of memory...", kBytesToReserve);
   some_data_ = new uint8_t[kBytesToReserve];
   for (int index = 0; index < kBytesToReserve; ++index) {
@@ -36,10 +36,9 @@ std::string Worker::SomeGetter() const noexcept {
 
 //template <class T>
 bool Worker::VectorHasRepetitions(const std::vector<int> &data) const noexcept {
-  hare::debug("Worker::SomeSetter() called.");
-
+  AUTOLOG
   for (int element : data) {
-    hare::trace("Got element '{}' in data.", element);
+    hare::trace("Got elevent '{}' in data.", element);
   }
   return false;
 }

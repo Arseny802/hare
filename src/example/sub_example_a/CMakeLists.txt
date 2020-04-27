@@ -1,10 +1,10 @@
-set(PROJECT_NAME ${SOLUTION_NAME}.static_example)
+set(PROJECT_NAME ${SOLUTION_NAME}.shared_example)
 message(STATUS "Building ${PROJECT_NAME}")
 project(${PROJECT_NAME})
 
 file(GLOB headers *.h)
 file(GLOB sources *.cpp)
-add_library(${PROJECT_NAME} STATIC EXCLUDE_FROM_ALL ${headers} ${sources})
+add_library(${PROJECT_NAME} SHARED EXCLUDE_FROM_ALL ${headers} ${sources})
 message("Adding headers: ${headers}")
 message("Adding sources: ${sources}")
 
@@ -13,5 +13,5 @@ include_directories(
 )
 message("Including directory: ${CMAKE_SOURCE_DIR}")
 
-link_specific_logger(${PROJECT_NAME})
+target_link_libraries(${PROJECT_NAME} PRIVATE ${SOLUTION_NAME}.logging)
 message("")

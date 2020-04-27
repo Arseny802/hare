@@ -5,8 +5,13 @@ message("##########################")
 
 # base settings for cmake
 cmake_minimum_required(VERSION 3.3)
+set(IS_SUBPROJECT OFF)
+if (${SOLUTION_NAME})
+    set(IS_SUBPROJECT ON)
+    set(MAIN_SOLUTION_NAME ${SOLUTION_NAME})
+endif (${SOLUTION_NAME})
 set(SOLUTION_NAME hare)
-project(${SOLUTION_NAME} CXX C)
+project(${SOLUTION_NAME} VERSION 1.0.0 LANGUAGES CXX)
 
 # temporary global linking
 set(CMAKE_LINKER_FLAGS "${CMAKE_LINKER_FLAGS}")
@@ -73,10 +78,6 @@ elseif ("${CMAKE_BUILD_TYPE}" STREQUAL "Release")
     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -D _RELEASE")
 endif()
 
-# text encoding for compiler
-add_compile_options("$<$<C_COMPILER_ID:MSVC>:/utf-8>")
-add_compile_options("$<$<CXX_COMPILER_ID:MSVC>:/utf-8>")
-
 message("")
 message("###################################")
 message("######## EXTERNAL PROJECTS ########")
@@ -108,17 +109,21 @@ message("#############################")
 message("########## SOURCES ##########")
 message("#############################")
 # base libs
+add_subdirectory(src/memory_tracer)
 add_subdirectory(src/logging)
 
-# tests files
-add_subdirectory(tests EXCLUDE_FROM_ALL)
+if (NOT ${IS_SUBPROJECT}) # building example target
+    add_subdirectory(src/example)
+    enable_testing()
+endif (${IS_SUBPROJECT})
 
-# enable testing
-enable_testing()
-set(PROJECT_TESTS ${CMAKE_PROJECT_NAME}.tests)
-add_test(tests/${PROJECT_TESTS} tests/${PROJECT_TESTS})
-add_custom_target(check COMMAND ${CMAKE_CTEST_COMMAND} --output-on-failure)
-add_dependencies(check ${PROJECT_TESTS})
+if(CMAKE_TESTING_ENABLED)
+    add_subdirectory(tests EXCLUDE_FROM_ALL)
+    set(PROJECT_TESTS ${CMAKE_PROJECT_NAME}.tests)
+    add_test(tests/${PROJECT_TESTS} tests/${PROJECT_TESTS})
+    add_custom_target(check COMMAND ${CMAKE_CTEST_COMMAND} --output-on-failure)
+    add_dependencies(check ${PROJECT_TESTS})
+endif()
 
 # checking build type on platform
 message("")
@@ -126,25 +131,19 @@ message("#############################")
 message("###### OS DEPENDENCIES ######")
 message("#############################")
 if (WIN32) # building on windows
-    message(STATUS "Cmake build for windows")
-    add_subdirectory(src/sub_example_a)
-    add_subdirectory(src/sub_example_so)
-    add_subdirectory(src/example)
     #add_subdirectory(win__special_sources)
 elseif (MSVC) # building on visual c++
-    message(STATUS "Cmake build for visual c++")
-    add_subdirectory(src/sub_example_a)
-    add_subdirectory(src/sub_example_so)
-    add_subdirectory(src/example)
+    add_compile_options("$<$<C_COMPILER_ID:MSVC>:/utf-8>")
+    add_compile_options("$<$<CXX_COMPILER_ID:MSVC>:/utf-8>")
     #add_subdirectory(win_msvc__special_sources)
 elseif (UNIX) # building on unix (mac, linux)
-    message(STATUS "Cmake build for unix")
-    add_subdirectory(src/sub_example_a)
-    add_subdirectory(src/sub_example_so)
-    add_subdirectory(src/example)
     #add_subdirectory(unix__special_sources)
 endif (WIN32)
 message("")
 message("##########################")
 message("######### FINISH #########")
 message("##########################")
+
+if (${IS_SUBPROJECT})
+    set(SOLUTION_NAME ${MAIN_SOLUTION_NAME})
+endif(${IS_SUBPROJECT})
