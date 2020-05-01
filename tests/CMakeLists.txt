@@ -4,22 +4,16 @@ project(${PROJECT_NAME})
 
 include_directories(${${CMAKE_PROJECT_NAME}_SOURCE_DIR}/src)
 
-set(project_directories
-        .
-        logging)
+file(GLOB_RECURSE inner_sources ./*.cpp)
+message("Adding sources: ${inner_sources}")
+add_executable(${PROJECT_NAME} ${inner_sources})
 
-foreach (current_dir ${project_directories})
-    file(GLOB_RECURSE inner_sources ${current_dir}/*.cpp)
-    message("Adding sources from ${current_dir}: ${inner_sources}")
-    set(files ${files} ${inner_sources})
-endforeach ()
-add_executable(${PROJECT_NAME} ${files})
-
-#find_package(GTest REQUIRED)
-#find_package(Threads REQUIRED)
+find_package(GTest REQUIRED)
+find_package(Threads REQUIRED)
 
 set(libs
-        ${CMAKE_PROJECT_NAME}
+        ${CMAKE_PROJECT_NAME}.logging
+        ${CMAKE_PROJECT_NAME}.memory_tracer
         ${GTEST_BOTH_LIBRARIES}
         ${CMAKE_THREAD_LIBS_INIT}
         )

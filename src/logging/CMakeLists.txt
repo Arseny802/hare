@@ -24,7 +24,6 @@ target_compile_features(${PROJECT_NAME} PRIVATE cxx_std_17)
 target_link_libraries(${PROJECT_NAME} LINK_PRIVATE fmt)
 target_link_libraries(${PROJECT_NAME} LINK_PRIVATE spdlog)
 
-target_link_libraries(${PROJECT_NAME} PUBLIC ${SOLUTION_NAME}.memory_tracer)
 message("Including library: ${SOLUTION_NAME}.memory_tracer")
 
 message("Including directory: ${CMAKE_CURRENT_SOURCE_DIR}")

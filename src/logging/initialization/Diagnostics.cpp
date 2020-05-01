@@ -3,36 +3,20 @@
 //
 
 #include "Diagnostics.h"
-#include "../../memory_tracer/MemoryTracer.h"
 
 namespace hare::logging {
 
 #ifdef _DEBUG
 spdlog::level::level_enum Diagnostics::current_level_ = spdlog::level::trace;
-std::string_view Diagnostics::log_format_ = "{date} [thread %t] {level} %! %v";
-
 #else
 #ifdef _RELEASE
 spdlog::level::level_enum Diagnostics::current_level_ = spdlog::level::info;
-
-#ifdef PROJECT_NAME
-std::string Diagnostics::log_format_ = "{date} [thread %t] {level} [%n] %v";
-#else
-std::string Diagnostics::log_format_ = "{date} [thread %t] {level} %v";
-#endif
-
 #else
 spdlog::level::level_enum Diagnostics::current_level_ = spdlog::level::trace;
-
-#ifdef PROJECT_NAME
-std::string Diagnostics::log_format_ = "{date} [thread %t] {level} [%n] %! %v";
-#else
-std::string Diagnostics::log_format_ = "{date} [thread %t] {level} %! %v";
-#endif
-
 #endif
 #endif
 
+std::string_view Diagnostics::log_format_ = "{date} [thread %t] {level} %! %v";
 std::mutex Diagnostics::initialization_locker_;
 bool Diagnostics::truncate_file_at_start = false;
 bool Diagnostics::initialized_ = false;
@@ -64,7 +48,6 @@ void Diagnostics::Initialize() {
   spdlog::info("Initialized logger with name '{}'.", logger_name);
   initialized_ = true;
   initialization_locker_.unlock();
-  hare::MemoryTracer::Enable();
 }
 
 spdlog::level::level_enum Diagnostics::GetCurrentLogLevel() noexcept {

@@ -64,7 +64,6 @@ int UseSumExampleShred() {
 
 int main() {
   AUTOLOG
-  hare::MemoryTracer::FixStart();
   int return_result = 0;
 
   hare::debug("Executing submodule function from shared library...");
@@ -85,6 +84,5 @@ int main() {
   }
 
   hare::trace("Returning 0, it's OK.");
-  hare::MemoryTracer::FixFinish();
   return return_result;
 }

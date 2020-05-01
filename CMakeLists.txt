@@ -31,8 +31,8 @@ message("#########################")
 message("Generator: ${CMAKE_GENERATOR}")
 message("Build tool: ${CMAKE_BUILD_TOOL}")
 message("Build type: ${CMAKE_BUILD_TYPE}")
-message("Build  directory: ${bin_dir}")
-message("Third party  dir: ${third_party_dir}")
+message("Build directory: ${bin_dir}")
+message("Third party dir: ${third_party_dir}")
 
 # set output folders
 # libs
@@ -109,13 +109,12 @@ message("#############################")
 message("########## SOURCES ##########")
 message("#############################")
 # base libs
-add_subdirectory(src/memory_tracer)
 add_subdirectory(src/logging)
 
 if (NOT ${IS_SUBPROJECT}) # building example target
     add_subdirectory(src/example)
     enable_testing()
-endif (${IS_SUBPROJECT})
+endif (NOT ${IS_SUBPROJECT})
 
 if(CMAKE_TESTING_ENABLED)
     add_subdirectory(tests EXCLUDE_FROM_ALL)

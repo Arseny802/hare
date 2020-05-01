@@ -7,11 +7,9 @@
       <file path="$PROJECT_DIR$/src" />
       <file path="$PROJECT_DIR$/tests" />
     </sourceRoots>
-    <libraryRoots>
-      <file path="$PROJECT_DIR$/third-party" />
-    </libraryRoots>
     <excludeRoots>
       <file path="$PROJECT_DIR$/bin" />
+      <file path="$PROJECT_DIR$/third-party" />
     </excludeRoots>
   </component>
   <component name="JavaScriptSettings">

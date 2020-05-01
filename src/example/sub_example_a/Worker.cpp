@@ -3,7 +3,6 @@
 //
 
 #include <src/logging/hare.h>
-#include <src/memory_tracer/MemoryTracer.h>
 #include "Worker.h"
 
 namespace sub_example_a {
