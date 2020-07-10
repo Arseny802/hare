@@ -2,7 +2,7 @@
 // Created by arseny on 28/03/2020.
 //
 
-#include <src/logging/hare.h>
+#include <src/logging/hare/hare.h>
 #include "sub_example_so/Worker.h"
 #include "sub_example_a/Worker.h"
 

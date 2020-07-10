@@ -10,15 +10,19 @@ namespace hare::logging {
 spdlog::level::level_enum Diagnostics::current_level_ = spdlog::level::trace;
 #else
 #ifdef _RELEASE
-spdlog::level::level_enum Diagnostics::current_level_ = spdlog::level::info;
+spdlog::Level::level_enum Diagnostics::current_level_ = spdlog::Level::info;
 #else
-spdlog::level::level_enum Diagnostics::current_level_ = spdlog::level::trace;
+spdlog::Level::level_enum Diagnostics::current_level_ = spdlog::Level::trace;
 #endif
 #endif
 
-std::string_view Diagnostics::log_format_ = "{date} [thread %t] {level} %! %v";
+const std::string Diagnostics::kProjectName = std::string(default_project_name_);
+const std::string Diagnostics::kLoggerName = kProjectName;
+const std::string Diagnostics::kLogFileName = fmt::format("logs/{}.log", kProjectName);
+
+std::string_view Diagnostics::log_format_ = "{date} [thread %t] {Level} %! %v";
 std::mutex Diagnostics::initialization_locker_;
-bool Diagnostics::truncate_file_at_start = false;
+bool Diagnostics::truncate_file_at_start_ = false;
 bool Diagnostics::initialized_ = false;
 
 void Diagnostics::Initialize() {
@@ -33,19 +37,19 @@ void Diagnostics::Initialize() {
 
 	sinks.push_back(std::make_shared<spdlog::sinks::stdout_sink_st>());
 	sinks.push_back(std::make_shared<spdlog::sinks::daily_file_sink_st>
-		                (log_file_name.data(), 0, 0, truncate_file_at_start, 14));
+		                (kLogFileName.data(), 0, 0, truncate_file_at_start_, 14));
 
 	auto combined_logger = std::make_shared<spdlog::logger>
-		(logger_name.data(), begin(sinks), end(sinks));
+		(kLoggerName.data(), begin(sinks), end(sinks));
 	spdlog::set_default_logger(combined_logger);
   }
 
   spdlog::set_level(current_level_);
   spdlog::set_pattern(fmt::format(log_format_.data(),
-                                  fmt::arg("date", date_format.value_or(default_date_format)),
-                                  fmt::arg("level", level_format.value_or(default_level_format)))
+                                  fmt::arg("date", date_format_.value_or(default_date_format_)),
+                                  fmt::arg("Level", level_format_.value_or(default_level_format_)))
   );
-  spdlog::info("Initialized logger with name '{}'.", logger_name);
+  spdlog::info("Initialized logger with name '{}'.", kLoggerName);
   initialized_ = true;
   initialization_locker_.unlock();
 }
@@ -54,19 +58,17 @@ spdlog::level::level_enum Diagnostics::GetCurrentLogLevel() noexcept {
   return current_level_;
 }
 
-void Diagnostics::SetCurrentLogLevel(spdlog::level::level_enum new_level) {
-  spdlog::set_level(new_level);
-  current_level_ = new_level;
-}
-
 std::string_view Diagnostics::GetCurrentLogPattern() noexcept {
   return log_format_;
+}
+std::string_view Diagnostics::GetLogFileName() noexcept {
+  return std::string_view();
 }
 
 void Diagnostics::SetCurrentLogPattern(std::string_view new_pattern) {
   spdlog::set_pattern(fmt::format(new_pattern.data(),
-                                  fmt::arg("date", date_format.value_or(default_date_format)),
-                                  fmt::arg("level", level_format.value_or(default_level_format)))
+                                  fmt::arg("date", date_format_.value_or(default_date_format_)),
+                                  fmt::arg("Level", level_format_.value_or(default_level_format_)))
   );
   log_format_ = new_pattern.data();
 }
@@ -74,7 +76,7 @@ void Diagnostics::SetCurrentLogPattern(std::string_view new_pattern) {
 /// Usage example, ignore it.
 void Example() {
   spdlog::info("Welcome to spdlog!");
-  spdlog::error("Some error message with arg: {}", 1);
+  spdlog::error("Some Error message with arg: {}", 1);
   spdlog::warn("Easy padding in numbers like {:08d}", 12);
   spdlog::critical("Support for int: {0:d};  hex: {0:x};  oct: {0:o}; bin: {0:b}", 42);
   spdlog::info("Support for floats {:03.2f}", 1.23456);
@@ -82,9 +84,9 @@ void Example() {
   spdlog::info("{:<30}", "left aligned");
   spdlog::debug("This message should be displayed..");
 
-  // define SPDLOG_ACTIVE_LEVEL to desired level
-  SPDLOG_TRACE("Some trace message with param {}", 42);
-  SPDLOG_DEBUG("Some debug message");
+  // define SPDLOG_ACTIVE_LEVEL to desired Level
+  SPDLOG_TRACE("Some Trace message with param {}", 42);
+  SPDLOG_DEBUG("Some Debug message");
 }
 
 }

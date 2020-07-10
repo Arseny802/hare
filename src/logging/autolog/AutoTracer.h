@@ -8,7 +8,7 @@
 #include <string_view>
 #include <string>
 #include "../initialization/Diagnostics.h"
-#include "../DiagnosticLevels.h"
+#include "../configuration/DiagnosticLevels.h"
 
 namespace hare {
 class AutoTracer {

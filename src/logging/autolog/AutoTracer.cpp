@@ -3,7 +3,7 @@
 //
 
 #include "AutoTracer.h"
-#include "../hare.hpp"
+#include "../hare/hare.hpp"
 
 namespace hare {
 
