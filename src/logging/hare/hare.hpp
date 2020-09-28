@@ -1,17 +1,15 @@
-//
-// Created by arseny on 29/03/2020.
-//
+#pragma once
 
 namespace hare {
 template<typename T>
 void trace(const std::string_view log_format_message, const T &args...) noexcept {
   trace(fmt::format(log_format_message, args));
-  //spdlog::trace(log_format_message, args);
+  //spdlog::Trace(log_format_message, args);
 }
 
 template<typename T>
 void debug(const std::string_view log_format_message, const T &args...) noexcept {
-  //debug(fmt::format(log_format_message, args));
+  //Debug(fmt::format(log_format_message, args));
   spdlog::debug(log_format_message, args);
 }
 

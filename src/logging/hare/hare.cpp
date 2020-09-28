@@ -8,6 +8,7 @@ namespace hare {
 
 void trace(const std::string_view log_message) noexcept {
   spdlog::trace(log_message);
+  static_logger.Trace(log_message);
 }
 
 void debug(const std::string_view log_message) noexcept {
