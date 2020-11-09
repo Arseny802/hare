@@ -2,16 +2,12 @@
 // Created by arseny on 02/05/2020.
 //
 
+#include <vector>
 #include "logger.h"
 
 namespace hare {
 Logger::Logger(ConfigPtr config)
-	: initialized_(false),
-	  kProjectName(config->GetProjectName()),
-	  kProjectName(config->GetProjectName()),
-	  kProjectName(config->GetProjectName()),
-	  kProjectName(config->GetProjectName()),
-	  level_format_(config->GetLevel()){
+	: initialized_(false){
   InitializeDefaultLogger();
 }
 
@@ -35,8 +31,8 @@ void Logger::InitializeDefaultLogger() {
 
   spdlog::set_level(current_level_);
   spdlog::set_pattern(fmt::format(log_format_.data(),
-                                  fmt::arg("date", date_format_.value_or(default_date_format_)),
-                                  fmt::arg("Level", level_format_.value_or(default_level_format_)))
+                                  fmt::arg("date", date_format_.has_value() ? date_format_.value() : default_date_format_),
+                                  fmt::arg("Level", level_format_.has_value() ? level_format_.value() : default_level_format_))
   );
   Info("Initialized logger with name '{}'.", kProjectName);
   initialized_ = true;

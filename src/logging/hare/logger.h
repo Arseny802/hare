@@ -2,6 +2,7 @@
 
 #include <string_view>
 #include <mutex>
+#include <optional>
 #include "../configuration/config.h"
 #include "../configuration/default_config.h"
 
@@ -9,6 +10,7 @@
 #include <spdlog/sinks/daily_file_sink.h>
 #include <spdlog/sinks/rotating_file_sink.h>
 #include "spdlog/spdlog.h"
+
 #ifdef _DEBUG
 #define SPDLOG_ACTIVE_LEVEL SPDLOG_LEVEL_DEBUG
 #else

@@ -4,7 +4,7 @@ message("######## PREBUILD ########")
 message("##########################")
 
 # base settings for cmake
-cmake_minimum_required(VERSION 3.3)
+cmake_minimum_required(VERSION 3.15)
 set(IS_SUBPROJECT OFF)
 if (${SOLUTION_NAME})
     set(IS_SUBPROJECT ON)
@@ -19,12 +19,11 @@ set(CMAKE_CXX_STANDARD 17)
 
 message("Set SOLUTION_NAME: ${SOLUTION_NAME}")
 message("Set CMAKE_LINKER_FLAGS: ${CMAKE_LINKER_FLAGS}")
-message("Set CMAKE_CXX_STANDARD: 17")
+message("Set CMAKE_CXX_STANDARD: 20")
 message("")
 
 # cmake build dir & generator
 set(bin_dir "${PROJECT_SOURCE_DIR}/bin")
-set(third_party_dir ${PROJECT_SOURCE_DIR}/third-party)
 message("#########################")
 message("######## GENERAL ########")
 message("#########################")
@@ -32,7 +31,6 @@ message("Generator: ${CMAKE_GENERATOR}")
 message("Build tool: ${CMAKE_BUILD_TOOL}")
 message("Build type: ${CMAKE_BUILD_TYPE}")
 message("Build directory: ${bin_dir}")
-message("Third party dir: ${third_party_dir}")
 
 # set output folders
 # libs
@@ -83,26 +81,12 @@ message("###################################")
 message("######## EXTERNAL PROJECTS ########")
 message("###################################")
 
-# Include fmt project for string formatting.
-set(fmt_path "${third_party_dir}/fmt")
-message("Loading fmt from '${fmt_path}'...")
-add_subdirectory(${fmt_path})
-include_directories(${fmt_path}/include)
-message("fmt loaded.")
-
-# Include spdlog project for logging.
-set(spdlog_path "${third_party_dir}/spdlog")
-message("Loading spdlog from '${spdlog_path}'...")
-add_subdirectory(${spdlog_path})
-include_directories(${spdlog_path}/include)
-message("spdlog loaded.")
-
-# Include Google test project for unit tests.
-set(googletest_path "${third_party_dir}/googletest")
-message("Loading googletest from '${googletest_path}'...")
-add_subdirectory(${googletest_path})
-include_directories(${googletest_path}/googletest/include)
-message("googletest loaded.")
+set(CONAN_DISABLE_CHECK_COMPILER True)
+if(NOT EXISTS ${CMAKE_BINARY_DIR}/conanbuildinfo.cmake)
+    execute_process(COMMAND CMD "conan install .")
+endif()
+include(${CMAKE_BINARY_DIR}/conanbuildinfo.cmake)
+conan_basic_setup()
 
 message("")
 message("#############################")
@@ -123,6 +107,8 @@ if(CMAKE_TESTING_ENABLED)
     add_custom_target(check COMMAND ${CMAKE_CTEST_COMMAND} --output-on-failure)
     add_dependencies(check ${PROJECT_TESTS})
 endif()
+
+#target_link_libraries(${CMAKE_PROJECT_NAME} ${CONAN_LIBS})
 
 # checking build type on platform
 message("")

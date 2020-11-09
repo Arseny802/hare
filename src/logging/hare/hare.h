@@ -88,5 +88,3 @@ void fatal(std::string_view log_format_message, const T& args...) noexcept;
 
 #include "hare.hpp"
 #include "../autolog/AutoTracer.h"
-
-#endif //HARE_SRC_LOGGING_HARE_H_

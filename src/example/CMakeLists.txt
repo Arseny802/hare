@@ -14,11 +14,14 @@ include_directories(
 )
 message("Including directory: ${CMAKE_SOURCE_DIR}")
 
+target_link_libraries(${PROJECT_NAME} PRIVATE ${CONAN_LIBS} fmt spdlog)
 target_link_libraries(${PROJECT_NAME} PRIVATE ${SOLUTION_NAME}.logging)
 message("Including library: ${SOLUTION_NAME}.logging")
 target_link_libraries(${PROJECT_NAME} PUBLIC ${SOLUTION_NAME}.static_example)
 message("Including library: ${SOLUTION_NAME}.static_example")
 target_link_libraries(${PROJECT_NAME} PUBLIC ${SOLUTION_NAME}.shared_example)
 message("Including library: ${SOLUTION_NAME}.shared_example")
+
+#conan_target_link_libraries(${PROJECT_NAME} fmt spdlog)
 
 message("")

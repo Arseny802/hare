@@ -41,6 +41,8 @@ class Diagnostics {
 
   static std::string_view GetLogFileName() noexcept;
 
+  void SetCurrentLogPattern(std::string_view new_pattern);
+
   /// Default value for date formatting. Called if date_format_ is empty.
   static constexpr std::string_view default_date_format_ = "[%d/%m/%C %H:%M:%S.%F]";
   /// Default value for Level formatting. Called if level_format_ is empty.

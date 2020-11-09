@@ -13,5 +13,9 @@ include_directories(
 )
 message("Including directory: ${CMAKE_SOURCE_DIR}")
 
-target_link_libraries(${PROJECT_NAME} PRIVATE ${SOLUTION_NAME}.logging)
+target_link_libraries(${PROJECT_NAME}
+        ${SOLUTION_NAME}.logging
+        ${CONAN_LIBS}
+        fmt
+        spdlog)
 message("")

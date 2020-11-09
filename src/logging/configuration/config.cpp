@@ -6,8 +6,9 @@
 
 namespace hare {
 
-Config::Config(std::string_view project_name) {
+Config::Config(std::string_view project_name, Levels level) {
   project_name_ = std::string(project_name);
+  level_ = level;
 }
 
 void Config::SetProjectName(const std::string_view project_name) {

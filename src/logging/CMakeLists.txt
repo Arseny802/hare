@@ -21,14 +21,18 @@ target_compile_definitions(${PROJECT_NAME} PRIVATE
 
 target_compile_features(${PROJECT_NAME} PRIVATE cxx_std_17)
 
-target_link_libraries(${PROJECT_NAME} LINK_PRIVATE fmt)
-target_link_libraries(${PROJECT_NAME} LINK_PRIVATE spdlog)
+target_link_libraries(${PROJECT_NAME} ${CONAN_LIBS} fmt spdlog)
+#conan_target_link_libraries(${PROJECT_NAME} fmt spdlog)
 
-message("Including library: ${SOLUTION_NAME}.memory_tracer")
-
-message("Including directory: ${CMAKE_CURRENT_SOURCE_DIR}")
-message("Linking private  library: fmt")
-message("Linking private  library: spdlog")
+#message("Including directory: ${CMAKE_CURRENT_SOURCE_DIR}")
+#
+#conan_target_link_libraries(${PROJECT_NAME} fmt spdlog)
+#
+#message("Linking private  library: fmt")
+#target_link_libraries(${PROJECT_NAME} PUBLIC fmt)
+#message("Linking private  library: spdlog")
+#target_link_libraries(${PROJECT_NAME} PUBLIC spdlog)
+#target_link_libraries(${PROJECT_NAME} PUBLIC ${CONAN_LIBS})
 
 message(STATUS "Building ${PROJECT_NAME} finished.")
 message("")

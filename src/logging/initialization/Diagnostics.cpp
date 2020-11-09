@@ -45,10 +45,6 @@ void Diagnostics::Initialize() {
   }
 
   spdlog::set_level(current_level_);
-  spdlog::set_pattern(fmt::format(log_format_.data(),
-                                  fmt::arg("date", date_format_.value_or(default_date_format_)),
-                                  fmt::arg("Level", level_format_.value_or(default_level_format_)))
-  );
   spdlog::info("Initialized logger with name '{}'.", kLoggerName);
   initialized_ = true;
   initialization_locker_.unlock();

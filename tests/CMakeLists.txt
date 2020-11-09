@@ -8,8 +8,8 @@ file(GLOB_RECURSE inner_sources ./*.cpp)
 message("Adding sources: ${inner_sources}")
 add_executable(${PROJECT_NAME} ${inner_sources})
 
-find_package(GTest REQUIRED)
-find_package(Threads REQUIRED)
+#find_package(GTest REQUIRED)
+#find_package(Threads REQUIRED)
 
 set(libs
         ${CMAKE_PROJECT_NAME}.logging
@@ -17,7 +17,7 @@ set(libs
         ${GTEST_BOTH_LIBRARIES}
         ${CMAKE_THREAD_LIBS_INIT}
         )
-target_link_libraries(${PROJECT_NAME} ${libs})
+target_link_libraries(${PROJECT_NAME} ${libs} GTEST)
 
 message("Including directories: ${${CMAKE_PROJECT_NAME}_SOURCE_DIR}/src")
 message("Including libraries: ${libs}")
