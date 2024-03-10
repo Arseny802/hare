@@ -1,17 +1,10 @@
-[settings]
-arch=x86_64
-compiler=gcc
-compiler.version=6.3
-build_type=Release
-
-[env]
-CFLAGS="-fpic"
-CXXFLAGS="-fpic"
-
 [requires]
-fmt/7.0.3
-spdlog/1.8.0
-gtest/1.10.0
+spdlog/1.11.0
+gtest/1.14.0
 
 [generators]
-cmake
+CMakeDeps
+CMakeToolchain
+
+[layout]
+cmake_layout

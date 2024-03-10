@@ -1,0 +1,13 @@
+#pragma once
+#include "hare/hare.hpp"
+
+#define HARE_EXAMPLE_PROJECT_NAME "hare_example"
+#define HARE_EXAMPLE_MODULE_NAME ""
+#define HARE_EXAMPLE_LOGGER_NAME HARE_EXAMPLE_PROJECT_NAME
+
+#define AUTOLOG_HE AUTOLOG_IN(HARE_EXAMPLE_LOGGER_NAME);
+#define AUTOMEASURE_HE AUTOMEASURE_IN(HARE_EXAMPLE_LOGGER_NAME);
+
+inline hare::hlogger_ptr hlog() {
+  return hare::get_logger(HARE_EXAMPLE_PROJECT_NAME, HARE_EXAMPLE_MODULE_NAME);
+}
