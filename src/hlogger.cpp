@@ -1,5 +1,6 @@
 #include "hare/hlogger.h"
 #include "hare/details/defs.h"
+#include "logger_fabric.h"
 
 #include <string_view>
 #include <mutex>
@@ -68,8 +69,12 @@ hlogger::hlogger(config_ptr config)
 hlogger::~hlogger() = default;
 
 void hlogger::initialize() {
+  const auto logger_name = config_->get_logger_name();
+
   std::lock_guard<std::mutex> lock(initialization_locker_);
-  if (initialized_) {
+  if (logger_fabric::is_logger_registered(logger_name)) {
+    logger_fabric::get_logger(logger_name)->warn(
+        "Try to initialise inited logger '{}'.", logger_name);
     return;
   }
 
@@ -89,17 +94,30 @@ void hlogger::initialize() {
 
   {
     std::vector<spdlog::sink_ptr> sinks;
+    const sinks_info& info = config_->get_sinks_info();
 
-    auto sink_console = std::make_shared<spdlog::sinks::stdout_sink_st>();
-    sink_console->set_level(hlevel_to_spdlog_level(config_->get_level()));
-    sink_console->set_pattern(pattern);
-    sinks.push_back(sink_console);
+    if (config_->get_type_mask() & htypes_mask::console) {
+      auto sink_console = std::make_shared<spdlog::sinks::stdout_sink_st>();
+      sink_console->set_level(hlevel_to_spdlog_level(config_->get_level()));
+      sink_console->set_pattern(pattern);
+      sinks.push_back(sink_console);
+    }
 
-    auto sink_file_daily = std::make_shared<spdlog::sinks::daily_file_sink_st>
-        (log_filename, 0, 0, config_->get_truncate_file_at_start(), 14);
-    sink_file_daily->set_level(hlevel_to_spdlog_level(config_->get_level()));
-    sink_file_daily->set_pattern(pattern);
-    sinks.push_back(sink_file_daily);
+    if (config_->get_type_mask() & htypes_mask::file_daily) {
+      auto sink_file_daily = std::make_shared<spdlog::sinks::daily_file_sink_st>
+          (log_filename, info.fs.rotation_hour, info.fs.rotation_minute, info.fs.truncate, info.fs.max_files);
+      sink_file_daily->set_level(hlevel_to_spdlog_level(config_->get_level()));
+      sink_file_daily->set_pattern(pattern);
+      sinks.push_back(sink_file_daily);
+    }
+
+    if (config_->get_type_mask() & htypes_mask::file_rotating) {
+      auto sink_file_rotating = std::make_shared<spdlog::sinks::rotating_file_sink_st>
+          (log_filename, info.fs.max_size, info.fs.max_files, info.fs.truncate);
+      sink_file_rotating->set_level(hlevel_to_spdlog_level(config_->get_level()));
+      sink_file_rotating->set_pattern(pattern);
+      sinks.push_back(sink_file_rotating);
+    }
 
     logger_pimpl_ = std::make_unique<logger_pimpl>(config_->get_module_name(), sinks);
     logger_pimpl_->logger.set_level(hlevel_to_spdlog_level(config_->get_level()));
@@ -108,7 +126,7 @@ void hlogger::initialize() {
 #else
 #endif
 
-  logger_pimpl_->logger.info("Initialized logger with name '{}'.", config_->get_logger_name());
+  logger_pimpl_->logger.info("Initialized logger with name '{}'.", logger_name);
   initialized_ = true;
 }
 

@@ -25,6 +25,10 @@ std::string config::get_module_name() const {
   return module_name_;
 }
 
+htypes_mask_t config::get_type_mask() const {
+  return htypes_mask_;
+}
+
 hlevels config::get_level() const {
   return logger_min_level_;
 }
@@ -41,8 +45,8 @@ std::optional<std::string> config::get_log_format_level() const {
   return log_format_level_;
 }
 
-bool config::get_truncate_file_at_start() const {
-  return truncate_file_at_start_;
+const sinks_info& config::get_sinks_info() const {
+  return sinks_info_;
 }
 
 std::string config::create_logger_name(const std::string &project_name, const std::string &module_name) {
@@ -51,7 +55,7 @@ std::string config::create_logger_name(const std::string &project_name, const st
     return name;
   }
 
-  return project_name + "." + module_name;
+  return name + "." + module_name;
 }
 
 bool config::parse_logger_name(const std::string &logger_name, std::string &project_name, std::string &module_name) {

@@ -27,7 +27,11 @@ config_default::config_default(std::string project_name, std::string module_name
   static_assert(false, "No logger implementation enabled - default logger cannot be constructed.");
 #endif
 
-  truncate_file_at_start_ = true;
+  sinks_info_.fs.truncate = true;
+  sinks_info_.fs.max_size = 100 * 1024 * 1024;
+  sinks_info_.fs.rotation_hour = 0;
+  sinks_info_.fs.rotation_minute = 0;
+  sinks_info_.fs.max_files = 14;
 }
 
 config_default::~config_default() = default;

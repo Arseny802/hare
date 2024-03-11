@@ -43,6 +43,10 @@ hlogger_ptr logger_fabric::get_logger(const std::string& project_name, const std
   return get_logger(hare::config::create_logger_name(project_name, module_name));
 }
 
+bool logger_fabric::is_logger_registered(const std::string& logger_name) {
+  return logger_map.contains(logger_name);
+}
+
 bool logger_fabric::register_logger(config_ptr&& config) {
   std::string name = config->get_logger_name();
   const auto logger_iter = logger_map.find(name);

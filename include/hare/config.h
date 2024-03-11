@@ -1,5 +1,7 @@
 #pragma once
 #include "hare/hlevels.h"
+#include "hare/htypes.h"
+#include "hare/sinks_info.h"
 
 #include <string>
 #include <optional>
@@ -24,6 +26,12 @@ struct config {
   [[nodiscard]] std::string get_module_name() const;
   ///
   /// \return
+  [[nodiscard]] htypes_mask_t get_type_mask() const;
+  ///
+  /// \return
+  [[nodiscard]] const sinks_info& get_sinks_info() const;
+  ///
+  /// \return
   [[nodiscard]] hlevels get_level() const;
   ///
   /// \return
@@ -34,9 +42,6 @@ struct config {
   ///
   /// \return
   [[nodiscard]] std::optional<std::string> get_log_format_level() const;
-  ///
-  /// \return
-  [[nodiscard]] bool get_truncate_file_at_start() const;
 
   ///
   /// \param new_project_name
@@ -59,12 +64,12 @@ struct config {
   std::string project_name_;
   std::string module_name_;
   hlevels logger_min_level_;
+  htypes_mask_t htypes_mask_;
+  sinks_info sinks_info_;
 
   std::optional<std::string> log_format_;
   std::optional<std::string> log_format_date_;
   std::optional<std::string> log_format_level_;
-
-  bool truncate_file_at_start_ = false;
 };
 
 using config_ptr = std::unique_ptr<config>;

@@ -10,7 +10,7 @@ struct config_custom : config_default {
   void set_log_format(std::string new_log_format);
   void set_log_format_date(std::string new_log_format_date);
   void set_log_format_level(std::string new_log_format_level);
-  void set_truncate_file_at_start(bool truncate_file_at_start);
+  void set_sinks_info(sinks_info new_sinks_info);
 };
 
 } // namespace hare
