@@ -1,4 +1,3 @@
-//#define HARE_EXAMPLE_SUB_SHARED_EXPORTS
 #include <hare/hare.hpp>
 #include "shared_library_example/worker.h"
 #include "details/hare_defs.h"

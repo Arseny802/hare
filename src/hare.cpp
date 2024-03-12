@@ -1,6 +1,7 @@
+#include "pch.h"
+
 #include "hare/hare.hpp"
 #include "hare/hlogger.h"
-
 #include "logger_fabric.h"
 
 namespace hare {

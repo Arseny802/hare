@@ -1,14 +1,13 @@
+#include "pch.h"
 #include "hare/config.h"
 #include "hare/details/config_default.h"
 
-#include <utility>
-
-
 namespace hare {
 
-config::config(std::string project_name, hare::hlevels level) {
-  project_name_ = std::move(project_name);
-  logger_min_level_ = level;
+config::config(std::string project_name, htypes_mask_t htypes_mask, hare::hlevels level)
+    : project_name_(std::move(project_name)),
+      htypes_mask_(htypes_mask),
+      logger_min_level_(level) {
 }
 
 config::~config() = default;
@@ -45,7 +44,7 @@ std::optional<std::string> config::get_log_format_level() const {
   return log_format_level_;
 }
 
-const sinks_info& config::get_sinks_info() const {
+const sinks_info &config::get_sinks_info() const {
   return sinks_info_;
 }
 

@@ -13,7 +13,8 @@ struct config {
   ///
   /// \param logger_name
   explicit config(std::string logger_name,
-                  hlevels level = hlevels::trace);
+                  htypes_mask_t htypes_mask,
+                  hlevels level);
   virtual ~config();
   ///
   /// \return

@@ -1,4 +1,4 @@
-#pragma once
+#include "pch.h"
 #include "hare/config_custom.h"
 
 namespace hare {

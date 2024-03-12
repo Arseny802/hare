@@ -1,10 +1,7 @@
+#include "pch.h"
 #include "hare/hlogger.h"
 #include "hare/details/defs.h"
 #include "logger_fabric.h"
-
-#include <string_view>
-#include <mutex>
-#include <optional>
 
 #ifdef USE_IMPLEMENTATION_SPDLOG
 
@@ -27,7 +24,23 @@
 
 #endif
 
+namespace hare {
 namespace {
+template<typename T>
+std::string get_log_format_pattern(const config_ptr &cfg, T defaults) {
+  return fmt::vformat(
+      cfg->get_log_format().has_value() ? cfg->get_log_format().value() : defaults.log_format,
+      fmt::make_format_args(
+          fmt::arg(config_defaults_base::log_format_argument_date.c_str(),
+                   cfg->get_log_format_date().has_value() ?
+                   cfg->get_log_format_date().value() : defaults.log_format_date),
+          fmt::arg(config_defaults_base::log_format_argument_level.c_str(),
+                   cfg->get_log_format_level().has_value() ?
+                   cfg->get_log_format_level().value() : defaults.log_format_level)
+      )
+  );
+}
+
 #ifdef USE_IMPLEMENTATION_SPDLOG
 spdlog::level::level_enum hlevel_to_spdlog_level(const hare::hlevels hare_level) {
   switch (hare_level) {
@@ -46,9 +59,8 @@ spdlog::level::level_enum hlevel_to_spdlog_level(const hare::hlevels hare_level)
 #else
 
 #endif
-}
+} // namespace
 
-namespace hare {
 #ifdef USE_IMPLEMENTATION_SPDLOG
 struct hlogger::logger_pimpl {
   logger_pimpl(const std::string &logger_name, const std::vector<spdlog::sink_ptr> &sinks)
@@ -63,57 +75,67 @@ struct hlogger::logger_pimpl {
 #endif
 
 hlogger::hlogger(config_ptr config)
-    : config_(std::move(config)), initialized_(false) {
+    : config_(std::move(config)) {
   initialize();
 }
-hlogger::~hlogger() = default;
+hlogger::~hlogger() {
+  logger_pimpl_->logger.info("Destroy logger with name '{}'.", config_->get_logger_name());
+}
 
 void hlogger::initialize() {
   const auto logger_name = config_->get_logger_name();
-
-  std::lock_guard<std::mutex> lock(initialization_locker_);
   if (logger_fabric::is_logger_registered(logger_name)) {
     logger_fabric::get_logger(logger_name)->warn(
         "Try to initialise inited logger '{}'.", logger_name);
     return;
   }
 
+  const std::string log_filename = config_->get_project_name() + ".log";
+
 #ifdef USE_IMPLEMENTATION_SPDLOG
   config_defaults_spdlog defaults;
-  const std::string pattern = fmt::vformat(
-      config_->get_log_format().has_value() ?
-      config_->get_log_format().value() : defaults.log_format,
-      fmt::make_format_args(
-          fmt::arg("date", config_->get_log_format_date().has_value() ?
-                           config_->get_log_format_date().value() : defaults.log_format_date),
-          fmt::arg("Level", config_->get_log_format_level().has_value() ?
-                            config_->get_log_format_level().value() : defaults.log_format_level)
-      )
-  );
-  const std::string log_filename = config_->get_project_name() + ".log";
+  const std::string pattern = get_log_format_pattern(config_, defaults);
 
   {
     std::vector<spdlog::sink_ptr> sinks;
-    const sinks_info& info = config_->get_sinks_info();
+    const sinks_info &info = config_->get_sinks_info();
 
     if (config_->get_type_mask() & htypes_mask::console) {
-      auto sink_console = std::make_shared<spdlog::sinks::stdout_sink_st>();
+      spdlog::sink_ptr sink_console;
+      if (config_->get_sinks_info().synchronize) {
+        sink_console = std::make_shared<spdlog::sinks::stdout_sink_mt>();
+      } else {
+        sink_console = std::make_shared<spdlog::sinks::stdout_sink_st>();
+      }
+
       sink_console->set_level(hlevel_to_spdlog_level(config_->get_level()));
       sink_console->set_pattern(pattern);
       sinks.push_back(sink_console);
     }
 
     if (config_->get_type_mask() & htypes_mask::file_daily) {
-      auto sink_file_daily = std::make_shared<spdlog::sinks::daily_file_sink_st>
-          (log_filename, info.fs.rotation_hour, info.fs.rotation_minute, info.fs.truncate, info.fs.max_files);
+      spdlog::sink_ptr sink_file_daily;
+      if (config_->get_sinks_info().synchronize) {
+        sink_file_daily = std::make_shared<spdlog::sinks::daily_file_sink_mt>
+            (log_filename, info.fs.rotation_hour, info.fs.rotation_minute, info.fs.truncate, info.fs.max_files_by_date);
+      } else {
+        sink_file_daily = std::make_shared<spdlog::sinks::daily_file_sink_st>
+            (log_filename, info.fs.rotation_hour, info.fs.rotation_minute, info.fs.truncate, info.fs.max_files_by_date);
+      }
       sink_file_daily->set_level(hlevel_to_spdlog_level(config_->get_level()));
       sink_file_daily->set_pattern(pattern);
       sinks.push_back(sink_file_daily);
     }
 
     if (config_->get_type_mask() & htypes_mask::file_rotating) {
-      auto sink_file_rotating = std::make_shared<spdlog::sinks::rotating_file_sink_st>
-          (log_filename, info.fs.max_size, info.fs.max_files, info.fs.truncate);
+      spdlog::sink_ptr sink_file_rotating;
+      if (config_->get_sinks_info().synchronize) {
+        sink_file_rotating = std::make_shared<spdlog::sinks::rotating_file_sink_mt>
+            (log_filename, info.fs.max_size, info.fs.max_files_by_size, info.fs.truncate);
+      } else {
+        sink_file_rotating = std::make_shared<spdlog::sinks::rotating_file_sink_st>
+            (log_filename, info.fs.max_size, info.fs.max_files_by_size, info.fs.truncate);
+      }
       sink_file_rotating->set_level(hlevel_to_spdlog_level(config_->get_level()));
       sink_file_rotating->set_pattern(pattern);
       sinks.push_back(sink_file_rotating);
@@ -127,7 +149,6 @@ void hlogger::initialize() {
 #endif
 
   logger_pimpl_->logger.info("Initialized logger with name '{}'.", logger_name);
-  initialized_ = true;
 }
 
 void hlogger::trace(const ::std::string_view log_message) noexcept {

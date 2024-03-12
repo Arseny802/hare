@@ -1,18 +1,17 @@
+#include "pch.h"
 #include "logger_fabric.h"
 
-#include <map>
-
 namespace hare {
-namespace {
-std::map<std::string, hlogger_ptr> logger_map;
-}
+std::map<std::string, hlogger_ptr> logger_fabric::logger_map_{};
+std::shared_mutex logger_fabric::data_mutex_{};
 
 hlogger_ptr logger_fabric::get_logger() {
-  if (logger_map.empty()) {
+  std::shared_lock lock(data_mutex_);
+  if (logger_map_.empty()) {
     static hlogger_ptr static_logger = std::make_shared<hlogger>();
     return static_logger;
   }
-  return logger_map.begin()->second;
+  return logger_map_.begin()->second;
 }
 
 hlogger_ptr logger_fabric::get_logger(const std::string &logger_name) {
@@ -20,9 +19,12 @@ hlogger_ptr logger_fabric::get_logger(const std::string &logger_name) {
     return get_logger();
   }
 
-  const auto logger_iter = logger_map.find(logger_name);
-  if (logger_iter != logger_map.cend()) {
-    return logger_iter->second;
+  {
+    std::shared_lock lock(data_mutex_);
+    const auto logger_iter = logger_map_.find(logger_name);
+    if (logger_iter != logger_map_.cend()) {
+      return logger_iter->second;
+    }
   }
 
   std::string project_name;
@@ -33,28 +35,32 @@ hlogger_ptr logger_fabric::get_logger(const std::string &logger_name) {
   }
 
   if (register_logger(std::make_unique<config_default>(project_name, module_name))) {
-    return logger_map.find(logger_name)->second;
+    std::shared_lock lock(data_mutex_);
+    return logger_map_.find(logger_name)->second;
   }
 
   return get_logger();
 }
 
-hlogger_ptr logger_fabric::get_logger(const std::string& project_name, const std::string& module_name) {
+hlogger_ptr logger_fabric::get_logger(const std::string &project_name, const std::string &module_name) {
   return get_logger(hare::config::create_logger_name(project_name, module_name));
 }
 
-bool logger_fabric::is_logger_registered(const std::string& logger_name) {
-  return logger_map.contains(logger_name);
+bool logger_fabric::is_logger_registered(const std::string &logger_name) {
+  std::shared_lock lock(data_mutex_);
+  return logger_map_.contains(logger_name);
 }
 
-bool logger_fabric::register_logger(config_ptr&& config) {
+bool logger_fabric::register_logger(config_ptr &&config) {
   std::string name = config->get_logger_name();
-  const auto logger_iter = logger_map.find(name);
-  if (logger_iter == logger_map.cend()) {
-    logger_map.emplace(std::move(name), std::make_unique<hlogger>(std::move(config)));
-    return true;
+  if (is_logger_registered(name)) {
+    return false;
   }
 
-  return false;
+  auto new_logger_ptr = std::make_unique<hlogger>(std::move(config));
+
+  std::unique_lock lock(data_mutex_);
+  logger_map_.emplace(std::move(name), std::move(new_logger_ptr));
+  return true;
 }
 } // namespace hare

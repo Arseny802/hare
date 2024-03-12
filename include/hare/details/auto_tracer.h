@@ -6,7 +6,8 @@
 namespace hare::details {
 class auto_tracer {
 public:
-    explicit auto_tracer(const std::string& logger_name, std::string_view file_name, std::string_view function_signature);
+    explicit auto_tracer(const std::string& logger_name,
+                         std::string_view file_name, std::string_view function_signature);
     explicit auto_tracer(std::string_view file_name, std::string_view function_signature);
     ~auto_tracer();
 
@@ -21,7 +22,8 @@ private:
 
 class auto_measure {
  public:
-  explicit auto_measure(const std::string& logger_name, std::string_view file_name, std::string_view function_signature);
+  explicit auto_measure(const std::string& logger_name,
+                        std::string_view file_name, std::string_view function_signature);
   explicit auto_measure(std::string_view file_name, std::string_view function_signature);
   ~auto_measure();
 

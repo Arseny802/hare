@@ -1,3 +1,4 @@
+#include "pch.h"
 #include "hare/details/auto_tracer.h"
 #include "hare/hlogger.h"
 

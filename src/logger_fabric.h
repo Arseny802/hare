@@ -11,6 +11,7 @@ class logger_fabric {
   static bool register_logger(config_ptr&& config);
 
  private:
-
+  static std::map<std::string, hlogger_ptr> logger_map_;
+  static std::shared_mutex data_mutex_;
 };
 } // namespace hare

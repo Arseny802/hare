@@ -7,6 +7,7 @@
 #include <optional>
 #include <string_view>
 #include <memory>
+#include <mutex>
 
 
 namespace hare {
@@ -123,10 +124,6 @@ class hlogger final {
 
   struct logger_pimpl;
   std::unique_ptr<logger_pimpl> logger_pimpl_;
-
-  /// Was Initialize() function called or not.
-  bool initialized_;
-  std::mutex initialization_locker_;
 };
 
 using hlogger_ptr = std::shared_ptr<hlogger>;
