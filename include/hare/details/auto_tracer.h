@@ -9,6 +9,7 @@ public:
     explicit auto_tracer(const std::string& logger_name,
                          std::string_view file_name, std::string_view function_signature);
     explicit auto_tracer(std::string_view file_name, std::string_view function_signature);
+    explicit auto_tracer(const char* logger_name, const char* file_name, const char* function_signature);
     ~auto_tracer();
 
 private:

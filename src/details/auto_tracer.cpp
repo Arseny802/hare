@@ -32,6 +32,17 @@ auto_tracer::auto_tracer(
   on_initialized();
 }
 
+auto_tracer::auto_tracer(
+    const char* logger_name,
+    const char* file_name,
+    const char* function_signature)
+    : logger_(logger_fabric::get_logger(logger_name)),
+      file_name_(get_local_file_name(file_name)),
+      function_signature_(function_signature) {
+  on_initialized();
+
+}
+
 auto_tracer::~auto_tracer() {
   if (std::uncaught_exceptions() > 0) {
     logger_->debug("Function {} left with {} uncaught exceptions in file {}.",
