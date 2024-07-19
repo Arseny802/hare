@@ -30,5 +30,13 @@
 *.exe
 *.out
 *.app
+
+.idea
+.vscode
 /bin/logs/*
 /bin/**
+build
+cmake_build
+
+CMakeUserPresets.json
+

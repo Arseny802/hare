@@ -1,9 +1,8 @@
 cmake_minimum_required(VERSION 3.15)
 project(hare VERSION 0.0.1 LANGUAGES CXX)
 
-set(CMAKE_LINKER_FLAGS "${CMAKE_LINKER_FLAGS}")
+set(CMAKE_C_STANDARD 17)
 set(CMAKE_CXX_STANDARD 20)
-set(CMAKE_BINARY_DIR "${PROJECT_SOURCE_DIR}/bin")
 
 if ("${CMAKE_PROJECT_NAME}" STREQUAL "${PROJECT_NAME}")
     set(HARE_IS_SUBPROJECT OFF)
@@ -12,6 +11,10 @@ else()
 endif()
 
 if (NOT HARE_IS_SUBPROJECT)
+    message(STATUS "-- -- -- -- -- -- -- -- -- -- -- -- -- -- --")
+    message(STATUS "BUILD_TOOL_TYPE_NAME: ${BUILD_TOOL_TYPE_NAME}")
+    set(CMAKE_BINARY_DIR "${PROJECT_SOURCE_DIR}/bin/${BUILD_TOOL_TYPE_NAME}")
+
     message("Set CMAKE_LINKER_FLAGS: ${CMAKE_LINKER_FLAGS}")
     message("Set CMAKE_CXX_STANDARD: ${CMAKE_CXX_STANDARD}")
     message("Generator: ${CMAKE_GENERATOR}")
@@ -32,8 +35,9 @@ if (NOT HARE_IS_SUBPROJECT)
         set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -Wextra")
         set(CMAKE_CXX_FLAGS " ${CMAKE_CXX_FLAGS_INIT} -fPIC")
     endif (CMAKE_COMPILER_IS_GNUCXX)
-endif(HARE_IS_SUBPROJECT)
+endif(NOT HARE_IS_SUBPROJECT)
 
+find_package(fmt CONFIG REQUIRED)
 find_package(spdlog CONFIG REQUIRED)
 
 if ("${CMAKE_BUILD_TYPE}" STREQUAL "Debug")
@@ -82,4 +86,4 @@ if (NOT HARE_IS_SUBPROJECT)
 
     add_subdirectory(example)
     #add_subdirectory(tests)
-endif(HARE_IS_SUBPROJECT)
+endif(NOT HARE_IS_SUBPROJECT)
