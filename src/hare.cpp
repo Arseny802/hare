@@ -13,6 +13,10 @@ bool register_logger(config_ptr &&config) {
   return logger_fabric::register_logger(std::move(config));
 }
 
+bool set_default_logger(const std::string &default_logger_name) {
+  return logger_fabric::set_default_logger(default_logger_name);
+}
+
 void trace(const std::string_view log_message) noexcept {
   logger_fabric::get_logger()->trace(log_message);
 }

@@ -12,6 +12,8 @@ hlogger_ptr get_logger(const std::string& project_name,
 /// \param config
 bool register_logger(config_ptr&& config);
 
+bool set_default_logger(const std::string &default_logger_name);
+
 ///
 /// \param log_message
 void trace(std::string_view log_message) noexcept;

@@ -4,6 +4,7 @@
 namespace hare {
 std::map<std::string, hlogger_ptr> logger_fabric::logger_map_{};
 std::shared_mutex logger_fabric::data_mutex_{};
+std::string logger_fabric::default_logger_name;
 
 hlogger_ptr logger_fabric::get_logger() {
   std::shared_lock lock(data_mutex_);
@@ -11,6 +12,13 @@ hlogger_ptr logger_fabric::get_logger() {
     static hlogger_ptr static_logger = std::make_shared<hlogger>();
     return static_logger;
   }
+  if (!default_logger_name.empty()) {
+    auto found_default_logger = logger_map_.find(default_logger_name);
+    if (found_default_logger != logger_map_.end()) {
+      return found_default_logger->second;
+    }
+  }
+  
   return logger_map_.begin()->second;
 }
 
@@ -49,6 +57,14 @@ hlogger_ptr logger_fabric::get_logger(const std::string &project_name, const std
 bool logger_fabric::is_logger_registered(const std::string &logger_name) {
   std::shared_lock lock(data_mutex_);
   return logger_map_.contains(logger_name);
+}
+
+bool logger_fabric::set_default_logger(const std::string &logger_name) {
+  if (!is_logger_registered(logger_name)) 
+    return false;
+    
+  default_logger_name = logger_name;
+  return true;
 }
 
 bool logger_fabric::register_logger(config_ptr &&config) {
