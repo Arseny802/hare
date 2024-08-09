@@ -1,9 +1,6 @@
 cmake_minimum_required(VERSION 3.15)
 project(hare VERSION 0.0.1 LANGUAGES CXX)
 
-set(CMAKE_C_STANDARD 17)
-set(CMAKE_CXX_STANDARD 20)
-
 if ("${CMAKE_PROJECT_NAME}" STREQUAL "${PROJECT_NAME}")
     set(HARE_IS_SUBPROJECT OFF)
 else()
@@ -75,6 +72,12 @@ target_include_directories(${PROJECT_NAME}
 target_link_libraries(${PROJECT_NAME} PUBLIC
     spdlog::spdlog
     fmt::fmt)
+
+set_target_properties(${PROJECT_NAME} PROPERTIES
+    CMAKE_C_STANDARD 17
+    CMAKE_CXX_STANDARD 20
+    C_STANDARD_REQUIRED ON
+    CXX_STANDARD_REQUIRED ON)
 
 if (NOT HARE_IS_SUBPROJECT)
     if (WIN32) # building on windows
