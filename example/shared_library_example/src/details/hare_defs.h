@@ -8,7 +8,7 @@
 #define AUTOMEASURE_SLE AUTOMEASURE_IN(SHARED_LIBRARY_EXAMPLE_LOGGER_NAME);
 
 namespace shared_library_example {
-inline hare::hlogger_ptr hlog() {
-  return hare::get_logger(SHARED_LIBRARY_EXAMPLE_LOGGER_NAME);
-}
+  inline hare::hlogger_ptr hlog() {
+    return hare::get_logger(SHARED_LIBRARY_EXAMPLE_LOGGER_NAME);
+  }
 } // namespace shared_library_example

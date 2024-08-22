@@ -9,8 +9,7 @@
 #define AUTOMEASURE_SLE AUTOMEASURE_IN(STATIC_LIBRARY_EXAMPLE_LOGGER_NAME);
 
 namespace static_library_example {
-inline hare::hlogger_ptr hlog() {
-  return hare::get_logger(STATIC_LIBRARY_EXAMPLE_PROJECT_NAME, STATIC_LIBRARY_EXAMPLE_MODULE_NAME);
-
-}
+  inline hare::hlogger_ptr hlog() {
+    return hare::get_logger(STATIC_LIBRARY_EXAMPLE_PROJECT_NAME, STATIC_LIBRARY_EXAMPLE_MODULE_NAME);
+  }
 } // namespace static_library_example
