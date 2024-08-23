@@ -11,12 +11,12 @@ namespace hare {
     /**
      * Default constructor. Initializes the custom configuration with default values.
      */
-    config_custom() = default;
+    config_custom();
 
     /**
      * Destructor. Cleans up any resources allocated by the custom configuration.
      */
-    ~config_custom() override = default;
+    ~config_custom() override;
 
     /**
      * Sets the log format to use for logging.
