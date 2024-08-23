@@ -5,7 +5,6 @@
 #include "../logger_fabric.h"
 
 namespace hare::details {
-
   namespace {
     std::string get_local_file_name(std::string_view file_name) {
       return std::string(file_name.substr(file_name.find_last_of('/') + 1, file_name.size()));
