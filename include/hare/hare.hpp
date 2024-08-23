@@ -123,7 +123,7 @@ namespace hare {
 /**
  * Automatically logs messages based on the file and line number where this macro is used.
  */
-#define AUTOLOG hale::details::auto_tracer unique_local__tracer(__FILE__, __FUNCTION__)
+#define AUTOLOG hare::details::auto_tracer unique_local__tracer(__FILE__, __FUNCTION__)
 /**
  * Automatically logs messages with a given logger name. This can be used to
  * distinguish between different modules or components that are logging at the same
