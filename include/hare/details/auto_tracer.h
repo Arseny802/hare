@@ -1,5 +1,6 @@
 #pragma once
 #include "hare/hlogger.h"
+#include <chrono>
 #include <string>
 #include <string_view>
 
@@ -13,7 +14,8 @@ public:
     ~auto_tracer();
 
 private:
-    inline void on_initialized();
+    inline void on_initialized() noexcept;
+    inline void on_deinitialized() const noexcept;
 
     const hlogger_ptr logger_;
 
@@ -30,11 +32,13 @@ public:
     ~auto_measure();
 
 private:
-    inline void on_initialized();
+    inline void on_initialized() noexcept;
+    inline void on_deinitialized() const noexcept;
 
     const hlogger_ptr logger_;
 
     const std::string file_name_;
     const std::string function_signature_;
+    std::chrono::time_point<std::chrono::steady_clock> started_;
   };
 } // namespace hare::details
