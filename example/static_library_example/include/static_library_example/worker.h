@@ -48,7 +48,7 @@ public:
     /**
      * A constant that specifies how many bytes should be reserved for certain operations.
      */
-    static const int k_bytes_to_reserve = 1024;
+    static const int k_bytes_to_reserve;
 
 private:
     std::string some_string_{};

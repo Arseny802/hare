@@ -4,7 +4,7 @@
 
 namespace static_library_example {
 
-  const int worker::k_bytes_to_reserve = 128;
+  const int worker::k_bytes_to_reserve = 1024;
 
   worker::worker() {
     AUTOLOG_IN("hare_example.st_lib_worker");
