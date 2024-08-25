@@ -1,4 +1,5 @@
 #pragma once
+#include <hare/hare.hpp>
 
 #define SHARED_LIBRARY_EXAMPLE_PROJECT_NAME "sh_lib_worker"
 #define SHARED_LIBRARY_EXAMPLE_MODULE_NAME ""
