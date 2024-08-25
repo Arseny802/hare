@@ -1,4 +1,3 @@
-#pragma once
 #include "config_defaults_base.h"
 
 namespace hare {
