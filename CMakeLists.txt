@@ -32,8 +32,10 @@ if (NOT HARE_IS_SUBPROJECT)
     # Set default compile flags for GCC
     if (CMAKE_COMPILER_IS_GNUCXX)
         message(STATUS "GCC detected, adding compile flags")
-        set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -Wextra")
-        set(CMAKE_CXX_FLAGS " ${CMAKE_CXX_FLAGS_INIT} -fPIC")
+        set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fPIC -pipe -pedantic -Wall -Wextra -Wcast-align -Wcast-qual")
+        set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wchar-subscripts -Wformat-nonliteral -Wmissing-declarations")
+        set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wpointer-arith -Wredundant-decls -Wundef -Wwrite-strings")
+        set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wno-unknown-pragmas -pthread")
     endif (CMAKE_COMPILER_IS_GNUCXX)
 endif(NOT HARE_IS_SUBPROJECT)
 
