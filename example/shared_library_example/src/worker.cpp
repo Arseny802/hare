@@ -4,16 +4,16 @@
 
 namespace shared_library_example {
 
-  const int worker::k_bytes_to_reserve_ = 128;
+  const int worker::k_bytes_to_reserve = 128;
 
   worker::worker() {
     AUTOLOG_IN("sh_lib_worker");
-    hare::debug("Allocating {} bytes of memory...", k_bytes_to_reserve_);
-    some_data_ = new uint8_t[k_bytes_to_reserve_];
-    for (int index = 0; index < k_bytes_to_reserve_; ++index) {
+    hare::debug("Allocating {} bytes of memory...", k_bytes_to_reserve);
+    some_data_ = new uint8_t[k_bytes_to_reserve];
+    for (int index = 0; index < k_bytes_to_reserve; ++index) {
       some_data_[index] = (index * index / 2);
     }
-    hare::trace("Allocating {} bytes of memory OK.", k_bytes_to_reserve_);
+    hare::trace("Allocating {} bytes of memory OK.", k_bytes_to_reserve);
   }
 
   worker::~worker() {

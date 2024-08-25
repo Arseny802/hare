@@ -24,6 +24,7 @@ public:
      * @post No external resources will be held.
      */
     ~worker();
+
     /**
      * Checks if a given vector of integers has any repetitions.
      *
