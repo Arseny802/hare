@@ -22,18 +22,10 @@ public:
      * @param file_name The name of the file.
      * @param function_signature The function signature.
      */
-    explicit auto_tracer(const std::string& logger_name,
-                         std::string_view file_name,
-                         std::string_view function_signature);
-
-    /**
-     * @brief Constructor that initializes the logger with a specified file name and
-     *         function signature, using the default logger name.
-     *
-     * @param file_name The name of the file.
-     * @param function_signature The function signature.
-     */
-    explicit auto_tracer(std::string_view file_name, std::string_view function_signature);
+    explicit auto_tracer(std::string_view file_name,
+                         std::string_view function_signature,
+                         const std::string& logger_name = "",
+                         std::string_view obj_name = "") noexcept;
 
     /**
      * @brief Destructor that deinitializes the logger.
@@ -65,6 +57,7 @@ private:
     const hare::hlogger_ptr logger_;
     const std::string file_name_;
     const std::string function_signature_;
+    const std::string obj_name_;
   };
 
   /**
@@ -83,18 +76,10 @@ public:
      * @param file_name The name of the file.
      * @param function_signature The function signature.
      */
-    explicit auto_measure(const std::string& logger_name,
-                          std::string_view file_name,
-                          std::string_view function_signature);
-
-    /**
-     * @brief Constructor that initializes the logger with a specified file name and
-     *         function signature, using the default logger name.
-     *
-     * @param file_name The name of the file.
-     * @param function_signature The function signature.
-     */
-    explicit auto_measure(std::string_view file_name, std::string_view function_signature);
+    explicit auto_measure(std::string_view file_name,
+                          std::string_view function_signature,
+                          const std::string& logger_name = "",
+                          std::string_view obj_name = "") noexcept;
 
     /**
      * @brief Destructor that deinitializes the logger.
@@ -126,6 +111,7 @@ private:
     const hare::hlogger_ptr logger_;
     const std::string file_name_;
     const std::string function_signature_;
+    const std::string obj_name_;
     std::chrono::time_point<std::chrono::steady_clock> started_;
   };
 } // namespace hare::details

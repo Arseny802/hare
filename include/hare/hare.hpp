@@ -125,16 +125,31 @@ namespace hare {
  */
 #define AUTOLOG hare::details::auto_tracer unique_local__tracer(__FILE__, __FUNCTION__);
 /**
+ * Automatically logs messages with obj_name based on the file and line number where this macro is used.
+ */
+#define AUTOLOG4(obj_name) hare::details::auto_tracer obj_name(__FILE__, __FUNCTION__, "", #obj_name);
+/**
  * Automatically logs messages with a given logger name. This can be used to
  * distinguish between different modules or components that are logging at the same
  * level (e.g., both "app" and "network" modules may be warning about something).
  */
-#define AUTOLOG_IN(logger_name) hare::details::auto_tracer unique_local__tracer(logger_name, __FILE__, __FUNCTION__);
+#define AUTOLOG_IN(logger_name) hare::details::auto_tracer unique_local__tracer(__FILE__, __FUNCTION__, logger_name);
+/**
+ * Automatically logs messages with a given logger name and obj_name. This can be used to
+ * distinguish between different modules or components that are logging at the same
+ * level (e.g., both "app" and "network" modules may be warning about something).
+ */
+#define AUTOLOG4_IN(logger_name, obj_name) \
+  hare::details::auto_tracer obj_name(__FILE__, __FUNCTION__, logger_name, #obj_name);
 
 /**
  * Automatically mesuress how long a block of code takes.
  */
-#define AUTOMEASURE hare::details::auto_tracer unique_local__tracer(__FILE__, __FUNCTION__);
+#define AUTOMEASURE hare::details::auto_measure unique_local__tracer(__FILE__, __FUNCTION__);
+/**
+ * Automatically mesuress with obj_name how long a block of code takes.
+ */
+#define AUTOMEASURE4(obj_name) hare::details::auto_measure obj_name(__FILE__, __FUNCTION__, "", #obj_name);
 /**
  * Automatically logs messages with a given logger name. This can be used to
  * distinguish between different modules or components that are logging at the same
@@ -143,4 +158,13 @@ namespace hare {
  * @param logger_name The name of the logger.
  */
 #define AUTOMEASURE_IN(logger_name) \
-  hare::details::auto_tracer unique_local__tracer(logger_name, __FILE__, __FUNCTION__);
+  hare::details::auto_measure unique_local__tracer(__FILE__, __FUNCTION__, logger_name);
+/**
+ * Automatically logs messages with a given logger name and obj_name. This can be used to
+ * distinguish between different modules or components that are logging at the same
+ * level (e.g., both "app" and "network" modules may be warning about something).
+ *
+ * @param logger_name The name of the logger.
+ */
+#define AUTOMEASURE4_IN(logger_name, obj_name) \
+  hare::details::auto_measure obj_name(__FILE__, __FUNCTION__, logger_name, #obj_name);
