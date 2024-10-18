@@ -2,9 +2,9 @@ cmake_minimum_required(VERSION 3.15)
 project(hare VERSION 0.0.1 LANGUAGES CXX)
 
 if ("${CMAKE_PROJECT_NAME}" STREQUAL "${PROJECT_NAME}")
-    set(HARE_IS_SUBPROJECT OFF)
+  set(HARE_IS_SUBPROJECT OFF)
 else()
-    set(HARE_IS_SUBPROJECT ON)
+  set(HARE_IS_SUBPROJECT ON)
 endif()
 
 if (NOT HARE_IS_SUBPROJECT)
@@ -28,7 +28,7 @@ if (NOT HARE_IS_SUBPROJECT)
   SET(CMAKE_LIBRARY_OUTPUT_DIRECTORY_RELEASE ${CMAKE_BINARY_DIR} CACHE PATH "Single Directory for all")
   SET(CMAKE_RUNTIME_OUTPUT_DIRECTORY_RELEASE ${CMAKE_BINARY_DIR} CACHE PATH "Single Directory for all")
   SET(CMAKE_ARCHIVE_OUTPUT_DIRECTORY_RELEASE ${CMAKE_BINARY_DIR} CACHE PATH "Single Directory for all")
-        
+
   # Set default compile flags for GCC
   if (CMAKE_COMPILER_IS_GNUCXX)
     message(STATUS "GCC detected, adding compile flags")
@@ -60,7 +60,6 @@ file(GLOB_RECURSE HARE_SOURCES
 file(GLOB_RECURSE HARE_HEADERS
   ${CMAKE_CURRENT_SOURCE_DIR}/include/*h
   ${CMAKE_CURRENT_SOURCE_DIR}/include/*hpp)
-message(${HARE_HEADERS})
 add_library(${PROJECT_NAME} STATIC ${HARE_HEADERS} ${HARE_SOURCES})
 
 target_precompile_headers(${PROJECT_NAME}
@@ -83,6 +82,6 @@ set_target_properties(${PROJECT_NAME} PROPERTIES
     CXX_STANDARD_REQUIRED ON)
 
 if (NOT HARE_IS_SUBPROJECT)
-    add_subdirectory(example)
-    #add_subdirectory(tests)
+  add_subdirectory(example)
+  #add_subdirectory(tests)
 endif(NOT HARE_IS_SUBPROJECT)
