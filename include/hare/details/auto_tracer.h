@@ -86,6 +86,8 @@ public:
      */
     ~auto_measure();
 
+    static constexpr bool enable_measure_pretty_format = true;
+
 private:
     /**
      * @brief Callback to be called when the logger is initialized.
