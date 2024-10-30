@@ -263,7 +263,7 @@ private:
      * @param level The logging level to check for enablement.
      * @return A boolean indicating whether the specified level is enabled.
      */
-    [[nodiscard]] constexpr bool is_level_enabled(hlevels level) const;
+    [[nodiscard]] bool is_level_enabled(hlevels level) const;
 
     /// This member variable stores the current configuration of the logger.
     /// It provides a way to access and manipulate the logger's settings.

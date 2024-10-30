@@ -210,7 +210,7 @@ namespace hare {
     return config_->clone();
   }
 
-  constexpr bool hlogger::is_level_enabled(hlevels level) const {
+  bool hlogger::is_level_enabled(hlevels level) const {
     if (level == hlevels::off) {
       return config_->get_level() == hlevels::off;
     }
