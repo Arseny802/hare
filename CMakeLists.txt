@@ -71,15 +71,18 @@ target_include_directories(${PROJECT_NAME}
     "$<BUILD_INTERFACE:${CMAKE_CURRENT_BINARY_DIR}/include>"
     "$<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>"
   PRIVATE
-    "${CMAKE_CURRENT_SOURCE_DIR}/src")
+    "${CMAKE_CURRENT_SOURCE_DIR}/src"
+)
 
 target_link_libraries(${PROJECT_NAME} PUBLIC
-    spdlog::spdlog
-    fmt::fmt)
+  spdlog::spdlog
+  fmt::fmt
+)
 
 set_target_properties(${PROJECT_NAME} PROPERTIES
-    CXX_STANDARD 20
-    CXX_STANDARD_REQUIRED ON)
+  CXX_STANDARD 20
+  CXX_STANDARD_REQUIRED ON
+)
 
 if (NOT HARE_IS_SUBPROJECT)
   add_subdirectory(example)

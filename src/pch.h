@@ -1,6 +1,5 @@
 #pragma once
 #include <cstdint>
-#include <format>
 #include <map>
 #include <memory>
 #include <mutex>
@@ -9,3 +8,9 @@
 #include <string>
 #include <string_view>
 #include <utility>
+
+#if __has_include(<format>)
+#  include <format>
+#else
+#  include <fmt/format.h>
+#endif

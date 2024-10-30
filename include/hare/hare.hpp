@@ -1,6 +1,11 @@
 #pragma once
 #include "details/auto_tracer.h"
-#include <format>
+
+#if __has_include(<format>)
+#  include <format>
+#else
+#  include <fmt/format.h>
+#endif
 
 namespace hare {
   ///
@@ -51,7 +56,11 @@ namespace hare {
   /// \param args
   template<typename... Args>
   void trace(const std::string_view log_format_message, Args&&... args) noexcept {
+#ifdef __cpp_lib_format
     trace(std::vformat(log_format_message, std::make_format_args(args...)));
+#else
+    trace(fmt::vformat(log_format_message, std::make_format_args(args...)));
+#endif
   }
 
   ///
@@ -60,7 +69,11 @@ namespace hare {
   /// \param args
   template<typename... Args>
   void debug(const std::string_view log_format_message, Args&&... args) noexcept {
+#ifdef __cpp_lib_format
     debug(std::vformat(log_format_message, std::make_format_args(args...)));
+#else
+    debug(fmt::vformat(log_format_message, std::make_format_args(args...)));
+#endif
   }
 
   ///
@@ -69,7 +82,11 @@ namespace hare {
   /// \param args
   template<typename... Args>
   void info(const std::string_view log_format_message, Args&&... args) noexcept {
+#ifdef __cpp_lib_format
     info(std::vformat(log_format_message, std::make_format_args(args...)));
+#else
+    info(fmt::vformat(log_format_message, std::make_format_args(args...)));
+#endif
   }
 
   ///
@@ -78,7 +95,11 @@ namespace hare {
   /// \param args
   template<typename... Args>
   void warn(const std::string_view log_format_message, Args&&... args) noexcept {
+#ifdef __cpp_lib_format
     warn(std::vformat(log_format_message, std::make_format_args(args...)));
+#else
+    warn(fmt::vformat(log_format_message, std::make_format_args(args...)));
+#endif
   }
 
   ///
@@ -87,7 +108,11 @@ namespace hare {
   /// \param args
   template<typename... Args>
   void warning(const std::string_view log_format_message, Args&&... args) noexcept {
-    warn(std::vformat(log_format_message, std::make_format_args(args...)));
+#ifdef __cpp_lib_format
+    warning(std::vformat(log_format_message, std::make_format_args(args...)));
+#else
+    warning(fmt::vformat(log_format_message, std::make_format_args(args...)));
+#endif
   }
 
   ///
@@ -96,7 +121,11 @@ namespace hare {
   /// \param args
   template<typename... Args>
   void error(const std::string_view log_format_message, Args&&... args) noexcept {
+#ifdef __cpp_lib_format
     error(std::vformat(log_format_message, std::make_format_args(args...)));
+#else
+    error(fmt::vformat(log_format_message, std::make_format_args(args...)));
+#endif
   }
 
   ///
@@ -105,7 +134,11 @@ namespace hare {
   /// \param args
   template<typename... Args>
   void critical(const std::string_view log_format_message, Args&&... args) noexcept {
+#ifdef __cpp_lib_format
     critical(std::vformat(log_format_message, std::make_format_args(args...)));
+#else
+    critical(fmt::vformat(log_format_message, std::make_format_args(args...)));
+#endif
   }
 
   ///
@@ -115,8 +148,12 @@ namespace hare {
   /// @param args Arguments to be formatted into the log message.
   template<typename... Args>
   void fatal(const std::string_view log_format_message, Args&&... args) noexcept {
-    // Call the actual logging function with the formatted message.
+// Call the actual logging function with the formatted message.
+#ifdef __cpp_lib_format
     fatal(std::vformat(log_format_message, std::make_format_args(args...)));
+#else
+    fatal(fmt::vformat(log_format_message, std::make_format_args(args...)));
+#endif
   }
 } // namespace hare
 
