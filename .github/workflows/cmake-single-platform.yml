@@ -1,0 +1,52 @@
+name: CMake on a single platform
+
+on:
+  push:
+    branches: [ "master" ]
+  pull_request:
+    branches: [ "master" ]
+
+env:
+  BUILD_TYPE: Release
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v4
+
+    - name: Install Conan
+      id: conan
+      uses: turtlebrowser/get-conan@main
+  
+    - name: Conan version
+      run: echo "${{ steps.conan.outputs.version }}"
+  
+    - name: Download build tools
+      run: git clone https://github.com/Arseny802/build_tools.git ${{github.workspace}}/build_tools
+
+    - name: Conan install
+      run: conan install -s build_type=${{env.BUILD_TYPE}} . --output-folder="${{github.workspace}}/cmake_build/lin_gcc_x64_rel" --name=lin_gcc_x64_rel -pr:h ${{github.workspace}}/build_tools/conan/.profiles/lin/lin_gcc_x64_rel -pr:b ${{github.workspace}}/build_tools/conan/.profiles/lin/lin_gcc_x64_rel --build=missing
+
+    - name: Set cmake_toolchain_file_path
+      id: strings
+      shell: bash
+      run: |
+        cd ${{github.workspace}}/cmake_build/lin_gcc_x64_rel && echo "cmake_toolchain_file_path=`find ~+ -type f -name "conan_toolchain.cmake"`" >> "$GITHUB_OUTPUT"
+
+    - name: Git submodule update
+      run: git submodule update --init --recursive
+
+    - name: Configure CMake
+      run: cmake -B ${{github.workspace}}/cmake_build/lin_gcc_x64_rel -DBUILD_TOOL_TYPE_NAME=lin_gcc_x64_rel  -DCMAKE_TOOLCHAIN_FILE=${{ steps.strings.outputs.cmake_toolchain_file_path }} -DCMAKE_BUILD_TYPE=${{env.BUILD_TYPE}}
+
+    - name: Build
+      run: cmake --build ${{github.workspace}}/cmake_build/lin_gcc_x64_rel --config ${{env.BUILD_TYPE}}
+
+    - name: Test
+      working-directory: ${{github.workspace}}/cmake_build/lin_gcc_x64_rel
+      # Execute tests defined by the CMake configuration.
+      # See https://cmake.org/cmake/help/latest/manual/ctest.1.html for more detail
+      run: ctest -C ${{env.BUILD_TYPE}}
+
