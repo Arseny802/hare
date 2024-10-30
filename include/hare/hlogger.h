@@ -101,7 +101,7 @@ public:
 #ifdef __cpp_lib_format
       trace(std::vformat(log_format_message, std::make_format_args(args...)));
 #else
-      trace(fmt::vformat(log_format_message, std::make_format_args(args...)));
+      trace(fmt::vformat(log_format_message, fmt::make_format_args(args...)));
 #endif
     }
     /**
@@ -120,7 +120,7 @@ public:
 #ifdef __cpp_lib_format
       debug(std::vformat(log_format_message, std::make_format_args(args...)));
 #else
-      debug(fmt::vformat(log_format_message, std::make_format_args(args...)));
+      debug(fmt::vformat(log_format_message, fmt::make_format_args(args...)));
 #endif
     }
     /**
@@ -139,7 +139,7 @@ public:
 #ifdef __cpp_lib_format
       info(std::vformat(log_format_message, std::make_format_args(args...)));
 #else
-      info(fmt::vformat(log_format_message, std::make_format_args(args...)));
+      info(fmt::vformat(log_format_message, fmt::make_format_args(args...)));
 #endif
     }
     /**
@@ -158,7 +158,7 @@ public:
 #ifdef __cpp_lib_format
       warn(std::vformat(log_format_message, std::make_format_args(args...)));
 #else
-      warn(fmt::vformat(log_format_message, std::make_format_args(args...)));
+      warn(fmt::vformat(log_format_message, fmt::make_format_args(args...)));
 #endif
     }
     /**
@@ -177,7 +177,7 @@ public:
 #ifdef __cpp_lib_format
       warning(std::vformat(log_format_message, std::make_format_args(args...)));
 #else
-      warning(fmt::vformat(log_format_message, std::make_format_args(args...)));
+      warning(fmt::vformat(log_format_message, fmt::make_format_args(args...)));
 #endif
     }
     /**
@@ -196,7 +196,7 @@ public:
 #ifdef __cpp_lib_format
       error(std::vformat(log_format_message, std::make_format_args(args...)));
 #else
-      error(fmt::vformat(log_format_message, std::make_format_args(args...)));
+      error(fmt::vformat(log_format_message, fmt::make_format_args(args...)));
 #endif
     }
     /**
@@ -215,7 +215,7 @@ public:
 #ifdef __cpp_lib_format
       critical(std::vformat(log_format_message, std::make_format_args(args...)));
 #else
-      critical(fmt::vformat(log_format_message, std::make_format_args(args...)));
+      critical(fmt::vformat(log_format_message, fmt::make_format_args(args...)));
 #endif
     }
 
@@ -235,7 +235,7 @@ public:
 #ifdef __cpp_lib_format
       fatal(std::vformat(log_format_message, std::make_format_args(args...)));
 #else
-      fatal(fmt::vformat(log_format_message, std::make_format_args(args...)));
+      fatal(fmt::vformat(log_format_message, fmt::make_format_args(args...)));
 #endif
     }
 
