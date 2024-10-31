@@ -6,8 +6,8 @@ namespace hare {
 
   config::config(std::string project_name, htypes_mask_t htypes_mask, hare::hlevels level):
       project_name_(std::move(project_name)),
-      htypes_mask_(htypes_mask),
-      logger_min_level_(level) { }
+      logger_min_level_(level),
+      htypes_mask_(htypes_mask) { }
 
   config::~config() = default;
 
