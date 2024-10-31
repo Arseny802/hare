@@ -5,6 +5,42 @@
 
 #include <vector>
 
+int use_sum_example_shared();
+int use_sum_example_static();
+void some_exception_void(bool throw_exception = true);
+void some_exception_void_wrapper();
+
+int main() {
+  AUTOLOG_HE
+  int return_result = 0;
+
+  try {
+    some_exception_void_wrapper();
+  } catch (std::runtime_error& exception) {
+    hlog()->info("Got runtime_error: {}", exception.what());
+  }
+
+  hlog()->debug("Executing submodule function from static library...");
+  if (!use_sum_example_static()) {
+    hlog()->critical("use_sum_example_static() return non-zero result.");
+    return_result = 1;
+  }
+
+  hlog()->debug("Executing submodule function from shared library...");
+  if (!use_sum_example_shared()) {
+    hlog()->critical("use_sum_example_shared() return non-zero result.");
+    return_result = 2;
+  }
+
+  hlog()->debug("Executing submodule function finished.");
+  if (return_result) {
+    hlog()->fatal("Program result code is not zero!");
+  }
+
+  hlog()->trace("Returning 0, it's OK.");
+  return return_result;
+}
+
 int use_sum_example_shared() {
   AUTOMEASURE_HE
   shared_library_example::worker worker;
@@ -39,7 +75,7 @@ int use_sum_example_static() {
   return 0;
 }
 
-void some_exception_void(bool throw_exception = true) {
+void some_exception_void(bool throw_exception) {
   AUTOLOG
   if (throw_exception) {
     throw std::runtime_error("Expected exception.");
@@ -49,35 +85,4 @@ void some_exception_void(bool throw_exception = true) {
 void some_exception_void_wrapper() {
   AUTOLOG
   some_exception_void(true);
-}
-
-int main() {
-  AUTOLOG_HE
-  int return_result = 0;
-
-  try {
-    some_exception_void_wrapper();
-  } catch (std::runtime_error& exception) {
-    hlog()->info("Got runtime_error: {}", exception.what());
-  }
-
-  hlog()->debug("Executing submodule function from static library...");
-  if (!use_sum_example_static()) {
-    hlog()->critical("use_sum_example_static() return non-zero result.");
-    return_result = 1;
-  }
-
-  hlog()->debug("Executing submodule function from shared library...");
-  if (!use_sum_example_shared()) {
-    hlog()->critical("use_sum_example_shared() return non-zero result.");
-    return_result = 2;
-  }
-
-  hlog()->debug("Executing submodule function finished.");
-  if (return_result) {
-    hlog()->fatal("Program result code is not zero!");
-  }
-
-  hlog()->trace("Returning 0, it's OK.");
-  return return_result;
 }

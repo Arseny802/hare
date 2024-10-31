@@ -23,32 +23,52 @@ namespace hare {
    *
    * @param log_message The message to be logged.
    */
-  void trace(std::string_view log_message) noexcept;
+  void trace(const std::string_view log_message) noexcept;
   /**
    * Logs a message with the `debug` level.
    *
    * @param log_message The message to be logged.
    */
-  void debug(std::string_view log_message) noexcept;
+  void debug(const std::string_view log_message) noexcept;
   /**
    * Logs a message with the `info` level.
    *
    * @param log_message The message to be logged.
    */
-  void info(std::string_view log_message) noexcept;
+  void info(const std::string_view log_message) noexcept;
   /**
    * Logs a message with the `warn` or `warning` level.
    *
    * @param log_message The message to be logged.
    */
-  void warn(std::string_view log_message) noexcept;
-
+  void warn(const std::string_view log_message) noexcept;
   /**
-   * Logs a message with the `error`, `critical`, or `fatal` level.
+   * Logs a message with the `warn` or `warning` level.
    *
    * @param log_message The message to be logged.
    */
-  void error(std::string_view log_message) noexcept;
+  void warning(const std::string_view log_message) noexcept;
+
+  /**
+   * Logs a message with the `error` level.
+   *
+   * @param log_message The message to be logged.
+   */
+  void error(const std::string_view log_message) noexcept;
+
+  /**
+   * Logs a message with the `critical` level.
+   *
+   * @param log_message The message to be logged.
+   */
+  void critical(const std::string_view log_message) noexcept;
+
+  /**
+   * Logs a message with the ``fatal` level.
+   *
+   * @param log_message The message to be logged.
+   */
+  void fatal(const std::string_view log_message) noexcept;
 
   ///
   /// \tparam Args

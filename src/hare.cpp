@@ -34,7 +34,7 @@ namespace hare {
   }
 
   void warning(const std::string_view log_message) noexcept {
-    logger_fabric::get_logger()->warn(log_message);
+    logger_fabric::get_logger()->warning(log_message);
   }
 
   void error(const std::string_view log_message) noexcept {
