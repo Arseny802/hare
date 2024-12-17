@@ -63,7 +63,11 @@ file(GLOB_RECURSE HARE_HEADERS
 add_library(${PROJECT_NAME} STATIC ${HARE_HEADERS} ${HARE_SOURCES})
 
 target_precompile_headers(${PROJECT_NAME}
-    PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/src/pch.h)
+  PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/include/hare/hare.hpp
+  PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/include/hare/hlogger.h
+  PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/include/ymapi/hare_ymapi.h
+  PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/src/pch.h
+)
 
 target_include_directories(${PROJECT_NAME}
   PUBLIC
