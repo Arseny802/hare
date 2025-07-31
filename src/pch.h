@@ -10,7 +10,7 @@
 #include <utility>
 
 #if __has_include(<format>)
-#  include <format>
+#include <format>
 #else
-#  include <fmt/format.h>
+#include <fmt/format.h>
 #endif
