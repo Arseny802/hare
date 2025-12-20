@@ -38,12 +38,16 @@ autolog<auto_measure, auto_flusher_all>::autolog(std::string_view file_name,
 }
 
 template <>
-autolog<auto_tracer, auto_flusher>::~autolog() = default;
+autolog<auto_tracer, auto_flusher>::~autolog() {
+}
 template <>
-autolog<auto_measure, auto_flusher>::~autolog() = default;
+autolog<auto_measure, auto_flusher>::~autolog() {
+}
 template <>
-autolog<auto_tracer, auto_flusher_all>::~autolog() = default;
+autolog<auto_tracer, auto_flusher_all>::~autolog() {
+}
 template <>
-autolog<auto_measure, auto_flusher_all>::~autolog() = default;
+autolog<auto_measure, auto_flusher_all>::~autolog() {
+}
 
 }  // namespace hare::details
