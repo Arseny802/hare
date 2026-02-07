@@ -20,20 +20,26 @@ jobs:
       id: conan
       run: |
         pipx ensurepath
-        pipx install conan
-        echo "/home/runner/.local/bin" >> $GITHUB_PATH
+        pipx install conan2
   
     - name: Download build tools
       run: git clone https://github.com/Arseny802/build_tools.git ${{github.workspace}}/build_tools
 
     - name: Conan install
-      run: conan install -s build_type=${{env.BUILD_TYPE}} . --output-folder="${{github.workspace}}/cmake_build/lin_gcc_x64_rel" --name=lin_gcc_x64_rel -pr:h ${{github.workspace}}/build_tools/conan/.profiles/lin/lin_gcc_x64_rel -pr:b ${{github.workspace}}/build_tools/conan/.profiles/lin/lin_gcc_x64_rel --build=missing
+      run: conan install -s build_type=${{env.BUILD_TYPE}} . 
+        --output-folder="${{github.workspace}}/cmake_build/lin_gcc_x64_rel" 
+        --name=lin_gcc_x64_rel 
+        -pr:h ${{github.workspace}}/build_tools/conan/.profiles/lin/lin_gcc_x64_rel 
+        -pr:b ${{github.workspace}}/build_tools/conan/.profiles/lin/lin_gcc_x64_rel 
+        --build=missing
 
     - name: Set cmake_toolchain_file_path
       id: strings
       shell: bash
       run: |
-        cd ${{github.workspace}}/cmake_build/lin_gcc_x64_rel && echo "cmake_toolchain_file_path=`find ~+ -type f -name "conan_toolchain.cmake"`" >> "$GITHUB_OUTPUT"
+        cd ${{github.workspace}}/cmake_build/lin_gcc_x64_rel 
+          && echo "cmake_toolchain_file_path=`find ~+ -type f -name "conan_toolchain.cmake"`"
+          >> "$GITHUB_OUTPUT"
 
     - name: Git submodule update
       run: git submodule update --init --recursive
