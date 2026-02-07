@@ -19,8 +19,7 @@ jobs:
     - name: Install Conan
       id: conan
       run: |
-        pipx install wheel setuptools
-        pipx install conan --upgrade
+        pipx install conan
         echo "/home/runner/.local/bin" >> $GITHUB_PATH
         conan --version
         echo "version=$(conan --version)" >> $GITHUB_OUTPUT
