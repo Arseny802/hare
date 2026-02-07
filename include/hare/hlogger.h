@@ -1,12 +1,14 @@
 #pragma once
 #include "config.h"
-#include "details/config_default.h"
+#include "config_default.h"
 #include "hlevels.h"
 
-#if __has_include(<format>)
-#include <format>
+#if HARE_ENABLE_STD_FORMAT && __has_include(<format>)
+#  include <format>
+namespace fmt_impl = std;
 #else
-#include <fmt/format.h>
+#  include <fmt/format.h>
+namespace fmt_impl = fmt;
 #endif
 
 #include <memory>
@@ -101,13 +103,9 @@ class hlogger final {
    * @param log_format_message A format string that describes the log message.
    * @param args Variable arguments that are used to construct the log message.
    */
-  template <typename... Args>
+  template<typename... Args>
   void trace(const std::string_view log_format_message, Args&&... args) noexcept {
-#ifdef __cpp_lib_format
-    trace(std::vformat(log_format_message, std::make_format_args(args...)));
-#else
-    trace(fmt::vformat(log_format_message, fmt::make_format_args(args...)));
-#endif
+    trace(fmt_impl::vformat(log_format_message, fmt_impl::make_format_args(args...)));
   }
   /**
    * Overload of the debug method that accepts a format string and variable arguments.
@@ -120,13 +118,9 @@ class hlogger final {
    * @param log_format_message A format string that describes the log message.
    * @param args Variable arguments that are used to construct the log message.
    */
-  template <typename... Args>
+  template<typename... Args>
   void debug(const std::string_view log_format_message, Args&&... args) noexcept {
-#ifdef __cpp_lib_format
-    debug(std::vformat(log_format_message, std::make_format_args(args...)));
-#else
-    debug(fmt::vformat(log_format_message, fmt::make_format_args(args...)));
-#endif
+    debug(fmt_impl::vformat(log_format_message, fmt_impl::make_format_args(args...)));
   }
   /**
    * Overload of the info method that accepts a format string and variable arguments.
@@ -139,13 +133,9 @@ class hlogger final {
    * @param log_format_message A format string that describes the log message.
    * @param args Variable arguments that are used to construct the log message.
    */
-  template <typename... Args>
+  template<typename... Args>
   void info(const std::string_view log_format_message, Args&&... args) noexcept {
-#ifdef __cpp_lib_format
-    info(std::vformat(log_format_message, std::make_format_args(args...)));
-#else
-    info(fmt::vformat(log_format_message, fmt::make_format_args(args...)));
-#endif
+    info(fmt_impl::vformat(log_format_message, fmt_impl::make_format_args(args...)));
   }
   /**
    * Overload of the warn method that accepts a format string and variable arguments.
@@ -158,13 +148,9 @@ class hlogger final {
    * @param log_format_message A format string that describes the log message.
    * @param args Variable arguments that are used to construct the log message.
    */
-  template <typename... Args>
+  template<typename... Args>
   void warn(const std::string_view log_format_message, Args&&... args) noexcept {
-#ifdef __cpp_lib_format
-    warn(std::vformat(log_format_message, std::make_format_args(args...)));
-#else
-    warn(fmt::vformat(log_format_message, fmt::make_format_args(args...)));
-#endif
+    warn(fmt_impl::vformat(log_format_message, fmt_impl::make_format_args(args...)));
   }
   /**
    * Overload of the warning method that accepts a format string and variable arguments.
@@ -177,13 +163,9 @@ class hlogger final {
    * @param log_format_message A format string that describes the log message.
    * @param args Variable arguments that are used to construct the log message.
    */
-  template <typename... Args>
+  template<typename... Args>
   void warning(const std::string_view log_format_message, Args&&... args) noexcept {
-#ifdef __cpp_lib_format
-    warning(std::vformat(log_format_message, std::make_format_args(args...)));
-#else
-    warning(fmt::vformat(log_format_message, fmt::make_format_args(args...)));
-#endif
+    warning(fmt_impl::vformat(log_format_message, fmt_impl::make_format_args(args...)));
   }
   /**
    * Overload of the error method that accepts a format string and variable arguments.
@@ -196,13 +178,9 @@ class hlogger final {
    * @param log_format_message A format string that describes the log message.
    * @param args Variable arguments that are used to construct the log message.
    */
-  template <typename... Args>
+  template<typename... Args>
   void error(const std::string_view log_format_message, Args&&... args) noexcept {
-#ifdef __cpp_lib_format
-    error(std::vformat(log_format_message, std::make_format_args(args...)));
-#else
-    error(fmt::vformat(log_format_message, fmt::make_format_args(args...)));
-#endif
+    error(fmt_impl::vformat(log_format_message, fmt_impl::make_format_args(args...)));
   }
   /**
    * Overload of the critical method that accepts a format string and variable arguments.
@@ -215,13 +193,9 @@ class hlogger final {
    * @param log_format_message A format string that describes the log message.
    * @param args Variable arguments that are used to construct the log message.
    */
-  template <typename... Args>
+  template<typename... Args>
   void critical(const std::string_view log_format_message, Args&&... args) noexcept {
-#ifdef __cpp_lib_format
-    critical(std::vformat(log_format_message, std::make_format_args(args...)));
-#else
-    critical(fmt::vformat(log_format_message, fmt::make_format_args(args...)));
-#endif
+    critical(fmt_impl::vformat(log_format_message, fmt_impl::make_format_args(args...)));
   }
 
   /**
@@ -235,13 +209,9 @@ class hlogger final {
    * @param log_format_message A format string that describes the log message.
    * @param args Variable arguments that are used to construct the log message.
    */
-  template <typename... Args>
+  template<typename... Args>
   void fatal(const std::string_view log_format_message, Args&&... args) noexcept {
-#ifdef __cpp_lib_format
-    fatal(std::vformat(log_format_message, std::make_format_args(args...)));
-#else
-    fatal(fmt::vformat(log_format_message, fmt::make_format_args(args...)));
-#endif
+    fatal(fmt_impl::vformat(log_format_message, fmt_impl::make_format_args(args...)));
   }
 
   /**
@@ -280,6 +250,5 @@ class hlogger final {
   std::unique_ptr<logger_pimpl> logger_pimpl_;
 };
 
-using hlogger_ptr =
-    std::shared_ptr<hlogger>;  // Defines a shared pointer type alias for the hlogger class.
-}  // namespace hare
+using hlogger_ptr = std::shared_ptr<hlogger>; // Defines a shared pointer type alias for the hlogger class.
+} // namespace hare

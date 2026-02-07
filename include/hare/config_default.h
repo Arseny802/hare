@@ -7,15 +7,19 @@ namespace hare {
  *
  * It provides a set of methods to configure project and module names, as well as log levels.
  */
-struct config_default : public config {
+struct config_default: public config {
   /**
    * @brief Construct a new config_default object with optional project and module names.
    *
    * @param project_name The name of the project (default is empty string).
    * @param module_name The name of the module (default is empty string).
    */
-  explicit config_default(std::string project_name = std::string(),
-                          std::string module_name = std::string());
+  explicit config_default(std::string project_name = std::string(), std::string module_name = std::string());
+
+  config_default(const config_default&) noexcept;
+  config_default(config_default&&) noexcept;
+  config_default& operator=(const config_default&) noexcept;
+  config_default& operator=(config_default&&) noexcept;
   /**
    * Destructor. Releases any resources allocated by this object.
    *
@@ -57,5 +61,12 @@ struct config_default : public config {
    * @return The default project name.
    */
   static std::string get_default_project_name();
+
+  /**
+   * @brief Get default hare level
+   *
+   * @return Default log level for library
+   */
+  constexpr static hlevels get_hlevel_default();
 };
-}  // namespace hare
+} // namespace hare

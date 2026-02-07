@@ -1,5 +1,5 @@
 #pragma once
-#include "hare/details/config_default.h"
+#include "config_default.h"
 
 namespace hare {
 /**
@@ -8,11 +8,15 @@ namespace hare {
  * This structure is used to store custom configurations that are specific to a particular use case
  * or application.
  */
-struct config_custom : config_default {
+struct config_custom: config_default {
   /**
    * Default constructor. Initializes the custom configuration with default values.
    */
-  config_custom();
+  config_custom() noexcept;
+  config_custom(const config_custom&) noexcept;
+  config_custom(config_custom&&) noexcept;
+  config_custom& operator=(const config_custom&) noexcept;
+  config_custom& operator=(config_custom&&) noexcept;
 
   /**
    * Destructor. Cleans up any resources allocated by the custom configuration.
@@ -47,4 +51,4 @@ struct config_custom : config_default {
    */
   void set_sinks_info(sinks_info new_sinks_info);
 };
-}  // namespace hare
+} // namespace hare

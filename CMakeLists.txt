@@ -1,57 +1,11 @@
 cmake_minimum_required(VERSION 3.15)
 project(hare VERSION 0.0.1 LANGUAGES CXX)
 
-if ("${CMAKE_PROJECT_NAME}" STREQUAL "${PROJECT_NAME}")
-  set(HARE_IS_SUBPROJECT OFF)
-else()
-  set(HARE_IS_SUBPROJECT ON)
-endif()
-
-if (NOT HARE_IS_SUBPROJECT)
-  message(STATUS "-- -- -- -- -- -- -- -- -- -- -- -- -- -- --")
-  message(STATUS "BUILD_TOOL_TYPE_NAME: ${BUILD_TOOL_TYPE_NAME}")
-  set(CMAKE_BINARY_DIR "${PROJECT_SOURCE_DIR}/bin/${BUILD_TOOL_TYPE_NAME}")
-
-  message("Set CMAKE_LINKER_FLAGS: ${CMAKE_LINKER_FLAGS}")
-  message("Set CMAKE_CXX_STANDARD: ${CMAKE_CXX_STANDARD}")
-  message("Generator: ${CMAKE_GENERATOR}")
-  message("Build tool: ${CMAKE_BUILD_TOOL}")
-  message("Build type: ${CMAKE_BUILD_TYPE}")
-  message("Build directory: ${CMAKE_BINARY_DIR}")
-
-  SET(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR} CACHE PATH "Single Directory for all")
-  SET(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR} CACHE PATH "Single Directory for all")
-  SET(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR} CACHE PATH "Single Directory for all")
-  SET(CMAKE_LIBRARY_OUTPUT_DIRECTORY_DEBUG ${CMAKE_BINARY_DIR} CACHE PATH "Single Directory for all")
-  SET(CMAKE_RUNTIME_OUTPUT_DIRECTORY_DEBUG ${CMAKE_BINARY_DIR} CACHE PATH "Single Directory for all")
-  SET(CMAKE_ARCHIVE_OUTPUT_DIRECTORY_DEBUG ${CMAKE_BINARY_DIR} CACHE PATH "Single Directory for all")
-  SET(CMAKE_LIBRARY_OUTPUT_DIRECTORY_RELEASE ${CMAKE_BINARY_DIR} CACHE PATH "Single Directory for all")
-  SET(CMAKE_RUNTIME_OUTPUT_DIRECTORY_RELEASE ${CMAKE_BINARY_DIR} CACHE PATH "Single Directory for all")
-  SET(CMAKE_ARCHIVE_OUTPUT_DIRECTORY_RELEASE ${CMAKE_BINARY_DIR} CACHE PATH "Single Directory for all")
-
-  # Set default compile flags for GCC
-  if (CMAKE_COMPILER_IS_GNUCXX)
-    message(STATUS "GCC detected, adding compile flags")
-    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fPIC -pipe -pedantic -Wall -Wextra -Wcast-align -Wcast-qual")
-    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wchar-subscripts -Wformat-nonliteral -Wmissing-declarations")
-    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wpointer-arith -Wredundant-decls -Wundef -Wwrite-strings")
-    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wno-unknown-pragmas -pthread")
-  elseif (MSVC) # building on visual c++
-    add_compile_options("$<$<C_COMPILER_ID:MSVC>:/utf-8>")
-    add_compile_options("$<$<CXX_COMPILER_ID:MSVC>:/utf-8>")
-  endif (CMAKE_COMPILER_IS_GNUCXX)
-endif(NOT HARE_IS_SUBPROJECT)
-
 find_package(fmt CONFIG REQUIRED)
 find_package(spdlog CONFIG REQUIRED)
 
-if ("${CMAKE_BUILD_TYPE}" STREQUAL "Debug")
-  message(STATUS "Build type is debug - setting compile arg \"-D _DEBUG\".")
-  set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -D _DEBUG")
-elseif ("${CMAKE_BUILD_TYPE}" STREQUAL "Release")
-  message(STATUS "Build type is relese - setting compile arg \"-D _RELEASE\".")
-  set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -D _RELEASE")
-endif()
+option(HARE_ENABLE_STD_FORMAT "Enable std format library (or use fmt)" OFF)
+option(HARE_USE_IMPLEMENTATION_SPDLOG "Use spdlog inner implementation" ON)
 
 file(GLOB_RECURSE HARE_SOURCES
   ${CMAKE_CURRENT_SOURCE_DIR}/src/details/*cpp
@@ -63,7 +17,11 @@ file(GLOB_RECURSE HARE_HEADERS
 add_library(${PROJECT_NAME} STATIC ${HARE_HEADERS} ${HARE_SOURCES})
 
 target_precompile_headers(${PROJECT_NAME}
-  PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/include/hare/hare.hpp
+  PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/include/hare/config_custom.h
+  PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/include/hare/config_default.h
+  PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/include/hare/config.h
+  PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/include/hare/hare_loggers.h
+  PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/include/hare/hlog.hpp
   PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/include/hare/hlogger.h
   PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/src/pch.h
 )
@@ -87,7 +45,19 @@ set_target_properties(${PROJECT_NAME} PROPERTIES
   CXX_STANDARD_REQUIRED ON
 )
 
-if (NOT HARE_IS_SUBPROJECT)
+if (HARE_ENABLE_STD_FORMAT)
+  target_compile_definitions(${PROJECT_NAME}
+    PUBLIC HARE_ENABLE_STD_FORMAT
+  )
+endif(HARE_ENABLE_STD_FORMAT)
+
+if (HARE_USE_IMPLEMENTATION_SPDLOG)
+  target_compile_definitions(${PROJECT_NAME}
+    PUBLIC HARE_USE_IMPLEMENTATION_SPDLOG
+  )
+endif(HARE_USE_IMPLEMENTATION_SPDLOG)
+
+if ("${CMAKE_PROJECT_NAME}" STREQUAL "${PROJECT_NAME}")
   add_subdirectory(example)
   #add_subdirectory(tests)
-endif(NOT HARE_IS_SUBPROJECT)
+endif("${CMAKE_PROJECT_NAME}" STREQUAL "${PROJECT_NAME}")

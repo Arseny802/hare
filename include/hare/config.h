@@ -14,6 +14,7 @@ namespace hare {
  * the logger name and the HTypes mask, as well as sets the default logging level.
  */
 struct config {
+  using ptr = std::unique_ptr<config>;
   /**
    * Constructor to initialize the logger with a given name, HTypes mask, and logging level.
    *
@@ -29,6 +30,17 @@ struct config {
    * is deleted through a base class pointer.
    */
   virtual ~config();
+  /**
+   * This method initializes the logger with the given configuration. If no
+   * configuration is provided, it uses the default configuration.
+   *
+   * @param config The configuration to use for initializing the logger.
+   * @return The logger name.
+   */
+  static std::string initialize_logger(const char project[],
+                                       const char module[],
+                                       ptr&& config = nullptr,
+                                       bool throw_on_error = true);
   /// Returns the logger name.
   /**
    * Retrieves the logger name that was set during initialization.
@@ -137,8 +149,7 @@ struct config {
    * @param module_name The module name to use for the logger name.
    * @return The generated logger name.
    */
-  static std::string create_logger_name(const std::string& project_name,
-                                        const std::string& module_name);
+  static std::string create_logger_name(const std::string& project_name, const std::string& module_name);
   /**
    * This method parses a logger name and extracts the project name and module
    * name from it. It is used to verify that the logger name conforms to the
@@ -149,8 +160,7 @@ struct config {
    * @param module_name The extracted module name.
    * @return Whether the logger name was successfully parsed.
    */
-  static bool parse_logger_name(const std::string& logger_name, std::string& project_name,
-                                std::string& module_name);
+  static bool parse_logger_name(const std::string& logger_name, std::string& project_name, std::string& module_name);
 
  protected:
   /**
@@ -212,5 +222,5 @@ struct config {
   std::optional<std::string> log_format_level_;
 };
 
-using config_ptr = std::unique_ptr<config>;
-}  // namespace hare
+using config_ptr = config::ptr;
+} // namespace hare

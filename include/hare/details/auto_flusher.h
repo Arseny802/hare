@@ -1,7 +1,9 @@
 #pragma once
 #include <string>
 
-#include "hare/hlogger.h"
+namespace hare {
+class hlogger;
+} // namespace hare
 
 namespace hare::details {
 /**
@@ -28,7 +30,7 @@ class auto_flusher final {
 
  private:
   // Members
-  const hare::hlogger_ptr logger_;
+  const std::shared_ptr<hlogger> logger_;
 };
 
 /**
@@ -52,4 +54,4 @@ class auto_flusher_all final {
   ~auto_flusher_all();
 };
 
-}  // namespace hare::details
+} // namespace hare::details

@@ -1,4 +1,5 @@
 #pragma once
+#include <cassert>
 #include <cstdint>
 #include <map>
 #include <memory>
@@ -9,8 +10,12 @@
 #include <string_view>
 #include <utility>
 
-#if __has_include(<format>)
-#include <format>
+#ifndef HARE_ENABLE_STD_FORMAT
+#  define HARE_ENABLE_STD_FORMAT 0
+#endif
+
+#if HARE_ENABLE_STD_FORMAT && __has_include(<format>)
+#  include <format>
 #else
-#include <fmt/format.h>
+#  include <fmt/format.h>
 #endif

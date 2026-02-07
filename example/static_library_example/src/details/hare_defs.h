@@ -1,15 +1,13 @@
 #pragma once
-#include "hare/hare.hpp"
-
-#define STATIC_LIBRARY_EXAMPLE_PROJECT_NAME "hare_example"
-#define STATIC_LIBRARY_EXAMPLE_MODULE_NAME "st_lib_worker"
-#define STATIC_LIBRARY_EXAMPLE_LOGGER_NAME STATIC_LIBRARY_EXAMPLE_PROJECT_NAME "." STATIC_LIBRARY_EXAMPLE_MODULE_NAME
-
-#define AUTOLOG_SLE AUTOLOG_IN(STATIC_LIBRARY_EXAMPLE_LOGGER_NAME);
-#define AUTOMEASURE_SLE AUTOMEASURE_IN(STATIC_LIBRARY_EXAMPLE_LOGGER_NAME);
+#ifndef PROJECT_NAME
+#  define PROJECT_NAME "hare_example"
+#endif
+#ifndef MODULE_NAME
+#  define MODULE_NAME "st_lib_worker"
+#endif
+#include <hare/hare.hpp>
 
 namespace static_library_example {
-  inline hare::hlogger_ptr hlog() {
-    return hare::get_logger(STATIC_LIBRARY_EXAMPLE_PROJECT_NAME, STATIC_LIBRARY_EXAMPLE_MODULE_NAME);
-  }
+// Default logger object getter, no config provided.
+MAKE_GETTER(hlog)
 } // namespace static_library_example

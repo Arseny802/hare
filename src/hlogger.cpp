@@ -1,78 +1,68 @@
 #include "pch.h"
 
-#include "hare/details/defs.h"
+#include "hare/defs.h"
 #include "hare/hlogger.h"
 #include "logger_fabric.h"
 
-#ifdef USE_IMPLEMENTATION_SPDLOG
+#ifdef HARE_USE_IMPLEMENTATION_SPDLOG
 
-#ifdef _DEBUG
-#define SPDLOG_ACTIVE_LEVEL SPDLOG_LEVEL_DEBUG
-#else
-#ifdef _RELEASE
-#define SPDLOG_ACTIVE_LEVEL SPDLOG_LEVEL_INFO
-#else
-#define SPDLOG_ACTIVE_LEVEL SPDLOG_LEVEL_TRACE
-#endif
-#endif
-#include <spdlog/sinks/daily_file_sink.h>
-#include <spdlog/sinks/rotating_file_sink.h>
-#include <spdlog/sinks/stdout_sinks.h>
+#  ifdef DEBUG
+#    define SPDLOG_ACTIVE_LEVEL SPDLOG_LEVEL_DEBUG
+#  else
+#    ifdef RELEASE
+#      define SPDLOG_ACTIVE_LEVEL SPDLOG_LEVEL_INFO
+#    else
+#      define SPDLOG_ACTIVE_LEVEL SPDLOG_LEVEL_TRACE
+#    endif
+#  endif
+#  include <spdlog/sinks/daily_file_sink.h>
+#  include <spdlog/sinks/rotating_file_sink.h>
+#  include <spdlog/sinks/stdout_sinks.h>
 
-#include "details/config_defaults_spdlog.h"
-#include "spdlog/spdlog.h"
+#  include "details/config_defaults_spdlog.h"
+#  include "spdlog/spdlog.h"
 #else
 
 #endif
 
 namespace hare {
 namespace {
-template <typename T>
+template<typename T>
 std::string get_log_format_pattern(const config_ptr& cfg, T defaults) {
   return fmt::vformat(
       cfg->get_log_format().has_value() ? cfg->get_log_format().value() : defaults.log_format,
-      fmt::make_format_args(
-          fmt::arg(config_defaults_base::log_format_argument_date.c_str(),
-                   cfg->get_log_format_date().has_value() ? cfg->get_log_format_date().value()
-                                                          : defaults.log_format_date),
-          fmt::arg(config_defaults_base::log_format_argument_level.c_str(),
-                   cfg->get_log_format_level().has_value() ? cfg->get_log_format_level().value()
-                                                           : defaults.log_format_level)));
+      fmt::make_format_args(fmt::arg(config_defaults_base::log_format_argument_date.c_str(),
+                                     cfg->get_log_format_date().has_value() ? cfg->get_log_format_date().value()
+                                                                            : defaults.log_format_date),
+                            fmt::arg(config_defaults_base::log_format_argument_level.c_str(),
+                                     cfg->get_log_format_level().has_value() ? cfg->get_log_format_level().value()
+                                                                             : defaults.log_format_level)));
 }
 
-#ifdef USE_IMPLEMENTATION_SPDLOG
+#ifdef HARE_USE_IMPLEMENTATION_SPDLOG
 spdlog::level::level_enum hlevel_to_spdlog_level(const hare::hlevels hare_level) {
   switch (hare_level) {
-    case hare::hlevels::off:
-      return spdlog::level::off;
-    case hare::hlevels::fatal:
-    case hare::hlevels::critical:
-      return spdlog::level::critical;
-    case hare::hlevels::error:
-      return spdlog::level::err;
-    case hare::hlevels::warning:
-      return spdlog::level::warn;
-    case hare::hlevels::info:
-      return spdlog::level::info;
-    case hare::hlevels::debug:
-      return spdlog::level::debug;
-    case hare::hlevels::trace:
-      return spdlog::level::trace;
-    default:
-      return spdlog::level::critical;
+  case hare::hlevels::off: return spdlog::level::off;
+  case hare::hlevels::fatal:
+  case hare::hlevels::critical: return spdlog::level::critical;
+  case hare::hlevels::error: return spdlog::level::err;
+  case hare::hlevels::warning: return spdlog::level::warn;
+  case hare::hlevels::info: return spdlog::level::info;
+  case hare::hlevels::debug: return spdlog::level::debug;
+  case hare::hlevels::trace: return spdlog::level::trace;
+  default: return spdlog::level::critical;
   }
 }
 
 #else
 
 #endif
-}  // namespace
+} // namespace
 
-#ifdef USE_IMPLEMENTATION_SPDLOG
+#ifdef HARE_USE_IMPLEMENTATION_SPDLOG
 struct hlogger::logger_pimpl {
-  logger_pimpl(const std::string& logger_name, const std::vector<spdlog::sink_ptr>& sinks)
-      : logger(logger_name, begin(sinks), end(sinks)) {
-  }
+  logger_pimpl(const std::string& logger_name, const std::vector<spdlog::sink_ptr>& sinks):
+      logger(logger_name, begin(sinks), end(sinks)) { }
   ~logger_pimpl() = default;
 
   spdlog::logger logger;
@@ -80,7 +70,7 @@ struct hlogger::logger_pimpl {
 #else
 #endif
 
-hlogger::hlogger(config_ptr config) : config_(std::move(config)) {
+hlogger::hlogger(config_ptr config): config_(std::move(config)) {
   initialize();
 }
 hlogger::~hlogger() {
@@ -90,14 +80,13 @@ hlogger::~hlogger() {
 void hlogger::initialize() {
   const auto logger_name = config_->get_logger_name();
   if (logger_fabric::is_logger_registered(logger_name)) {
-    logger_fabric::get_logger(logger_name)
-        ->warn("Try to initialise inited logger '{}'.", logger_name);
+    logger_fabric::get_logger(logger_name)->warn("Try to initialise inited logger '{}'.", logger_name);
     return;
   }
 
   const std::string log_filename = config_->get_project_name() + ".log";
 
-#ifdef USE_IMPLEMENTATION_SPDLOG
+#ifdef HARE_USE_IMPLEMENTATION_SPDLOG
   config_defaults_spdlog defaults;
   const std::string pattern = get_log_format_pattern(config_, defaults);
 
@@ -121,19 +110,11 @@ void hlogger::initialize() {
     if (config_->get_type_mask() & htypes_mask::file_daily) {
       spdlog::sink_ptr sink_file_daily;
       if (config_->get_sinks_info().synchronize) {
-        sink_file_daily =
-            std::make_shared<spdlog::sinks::daily_file_sink_mt>(log_filename,
-                                                                info.fs.rotation_hour,
-                                                                info.fs.rotation_minute,
-                                                                info.fs.truncate,
-                                                                info.fs.max_files_by_date);
+        sink_file_daily = std::make_shared<spdlog::sinks::daily_file_sink_mt>(
+            log_filename, info.fs.rotation_hour, info.fs.rotation_minute, info.fs.truncate, info.fs.max_files_by_date);
       } else {
-        sink_file_daily =
-            std::make_shared<spdlog::sinks::daily_file_sink_st>(log_filename,
-                                                                info.fs.rotation_hour,
-                                                                info.fs.rotation_minute,
-                                                                info.fs.truncate,
-                                                                info.fs.max_files_by_date);
+        sink_file_daily = std::make_shared<spdlog::sinks::daily_file_sink_st>(
+            log_filename, info.fs.rotation_hour, info.fs.rotation_minute, info.fs.truncate, info.fs.max_files_by_date);
       }
       sink_file_daily->set_level(hlevel_to_spdlog_level(config_->get_level()));
       sink_file_daily->set_pattern(pattern);
@@ -143,17 +124,11 @@ void hlogger::initialize() {
     if (config_->get_type_mask() & htypes_mask::file_rotating) {
       spdlog::sink_ptr sink_file_rotating;
       if (config_->get_sinks_info().synchronize) {
-        sink_file_rotating =
-            std::make_shared<spdlog::sinks::rotating_file_sink_mt>(log_filename,
-                                                                   info.fs.max_size,
-                                                                   info.fs.max_files_by_size,
-                                                                   info.fs.truncate);
+        sink_file_rotating = std::make_shared<spdlog::sinks::rotating_file_sink_mt>(
+            log_filename, info.fs.max_size, info.fs.max_files_by_size, info.fs.truncate);
       } else {
-        sink_file_rotating =
-            std::make_shared<spdlog::sinks::rotating_file_sink_st>(log_filename,
-                                                                   info.fs.max_size,
-                                                                   info.fs.max_files_by_size,
-                                                                   info.fs.truncate);
+        sink_file_rotating = std::make_shared<spdlog::sinks::rotating_file_sink_st>(
+            log_filename, info.fs.max_size, info.fs.max_files_by_size, info.fs.truncate);
       }
       sink_file_rotating->set_level(hlevel_to_spdlog_level(config_->get_level()));
       sink_file_rotating->set_pattern(pattern);
@@ -171,63 +146,63 @@ void hlogger::initialize() {
 }
 
 void hlogger::trace(const ::std::string_view log_message) noexcept {
-#ifdef USE_IMPLEMENTATION_SPDLOG
+#ifdef HARE_USE_IMPLEMENTATION_SPDLOG
   logger_pimpl_->logger.trace(log_message);
 #else
 #endif
 }
 
 void hlogger::debug(const ::std::string_view log_message) noexcept {
-#ifdef USE_IMPLEMENTATION_SPDLOG
+#ifdef HARE_USE_IMPLEMENTATION_SPDLOG
   logger_pimpl_->logger.debug(log_message);
 #else
 #endif
 }
 
 void hlogger::info(const ::std::string_view log_message) noexcept {
-#ifdef USE_IMPLEMENTATION_SPDLOG
+#ifdef HARE_USE_IMPLEMENTATION_SPDLOG
   logger_pimpl_->logger.info(log_message);
 #else
 #endif
 }
 
 void hlogger::warn(const ::std::string_view log_message) noexcept {
-#ifdef USE_IMPLEMENTATION_SPDLOG
+#ifdef HARE_USE_IMPLEMENTATION_SPDLOG
   logger_pimpl_->logger.warn(log_message);
 #else
 #endif
 }
 
 void hlogger::warning(const ::std::string_view log_message) noexcept {
-#ifdef USE_IMPLEMENTATION_SPDLOG
+#ifdef HARE_USE_IMPLEMENTATION_SPDLOG
   logger_pimpl_->logger.warn(log_message);
 #else
 #endif
 }
 
 void hlogger::error(const ::std::string_view log_message) noexcept {
-#ifdef USE_IMPLEMENTATION_SPDLOG
+#ifdef HARE_USE_IMPLEMENTATION_SPDLOG
   logger_pimpl_->logger.error(log_message);
 #else
 #endif
 }
 
 void hlogger::critical(const ::std::string_view log_message) noexcept {
-#ifdef USE_IMPLEMENTATION_SPDLOG
+#ifdef HARE_USE_IMPLEMENTATION_SPDLOG
   logger_pimpl_->logger.critical(log_message);
 #else
 #endif
 }
 
 void hlogger::fatal(const ::std::string_view log_message) noexcept {
-#ifdef USE_IMPLEMENTATION_SPDLOG
+#ifdef HARE_USE_IMPLEMENTATION_SPDLOG
   logger_pimpl_->logger.critical(log_message);
 #else
 #endif
 }
 
 void hlogger::flush() noexcept {
-#ifdef USE_IMPLEMENTATION_SPDLOG
+#ifdef HARE_USE_IMPLEMENTATION_SPDLOG
   logger_pimpl_->logger.flush();
 #else
 #endif
@@ -243,4 +218,4 @@ bool hlogger::is_level_enabled(hlevels level) const {
   }
   return config_->get_level() >= level;
 }
-};  // namespace hare
+}; // namespace hare

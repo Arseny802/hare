@@ -1,8 +1,8 @@
 #include "details/hare_defs.h"
 #include "shared_library_example/worker.h"
 #include "static_library_example/worker.h"
-#include <hare/hare.hpp>
 
+#include <cassert>
 #include <vector>
 
 int use_sum_example_shared();
@@ -11,13 +11,16 @@ void some_exception_void(bool throw_exception = true);
 void some_exception_void_wrapper();
 
 int main() {
-  AUTOLOG_HE
+  auto logger = hlog();
+  assert(hare::set_default_logger(logger->get_config_copy()->get_logger_name()) &&
+         "Default logger cannot be initialized and registered as default!");
+  logger->info("main started");
   int return_result = 0;
 
   try {
     some_exception_void_wrapper();
   } catch (std::runtime_error& exception) {
-    hlog()->info("Got runtime_error: {}", exception.what());
+    hlog()->warning("Got runtime_error: {}", exception.what());
   }
 
   hlog()->debug("Executing submodule function from static library...");
@@ -42,7 +45,7 @@ int main() {
 }
 
 int use_sum_example_shared() {
-  AUTOMEASURE_HE
+  AUTOTRACE4("shared")
   shared_library_example::worker worker;
   hare::info("Called worker.some_getter(), result is '{}'.", worker.some_getter());
   hare::info("Called worker.some_setter(), with value \"example new value\".");
@@ -59,7 +62,7 @@ int use_sum_example_shared() {
 }
 
 int use_sum_example_static() {
-  AUTOMEASURE_HE
+  AUTOMEASURE4("static")
   static_library_example::worker worker;
   hare::info("Called worker.some_getter(), result is '{}'.", worker.some_getter());
   hare::info("Called worker.some_setter(), with value \"example new value\".");
@@ -76,13 +79,13 @@ int use_sum_example_static() {
 }
 
 void some_exception_void(bool throw_exception) {
-  AUTOLOG
+  AUTOTRACE
   if (throw_exception) {
     throw std::runtime_error("Expected exception.");
   }
 }
 
 void some_exception_void_wrapper() {
-  AUTOLOG
+  AUTOTRACE
   some_exception_void(true);
 }

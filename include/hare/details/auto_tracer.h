@@ -2,7 +2,9 @@
 #include <string>
 #include <string_view>
 
-#include "hare/hlogger.h"
+namespace hare {
+class hlogger;
+} // namespace hare
 
 namespace hare::details {
 
@@ -23,7 +25,8 @@ class auto_tracer final {
    * @param file_name The name of the file.
    * @param function_signature The function signature.
    */
-  explicit auto_tracer(std::string_view file_name, std::string_view function_signature,
+  explicit auto_tracer(std::string_view file_name,
+                       std::string_view function_signature,
                        const std::string& logger_name = "",
                        std::string_view obj_name = "") noexcept;
 
@@ -54,10 +57,10 @@ class auto_tracer final {
   inline void on_deinitialized() const noexcept;
 
   // Members
-  const hare::hlogger_ptr logger_;
+  const std::shared_ptr<hlogger> logger_;
   const std::string file_name_;
   const std::string function_signature_;
   const std::string obj_name_;
 };
 
-}  // namespace hare::details
+} // namespace hare::details

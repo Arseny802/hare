@@ -1,13 +1,12 @@
 #pragma once
-#include "hare/hare.hpp"
+#ifndef PROJECT_NAME
+#  define PROJECT_NAME "hare_example"
+#endif
+#ifndef MODULE_NAME
+#  define MODULE_NAME ""
+#  define LOGGER_NAME PROJECT_NAME
+#endif
+#include <hare/hare.hpp>
 
-#define HARE_EXAMPLE_PROJECT_NAME "hare_example"
-#define HARE_EXAMPLE_MODULE_NAME ""
-#define HARE_EXAMPLE_LOGGER_NAME HARE_EXAMPLE_PROJECT_NAME
-
-#define AUTOLOG_HE AUTOLOG_IN(HARE_EXAMPLE_LOGGER_NAME);
-#define AUTOMEASURE_HE AUTOMEASURE_IN(HARE_EXAMPLE_LOGGER_NAME);
-
-inline hare::hlogger_ptr hlog() {
-  return hare::get_logger(HARE_EXAMPLE_PROJECT_NAME, HARE_EXAMPLE_MODULE_NAME);
-}
+// Default logger object getter, no config provided.
+MAKE_GETTER(hlog)

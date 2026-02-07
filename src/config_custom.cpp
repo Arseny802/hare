@@ -4,7 +4,11 @@
 
 namespace hare {
 
-config_custom::config_custom() = default;
+config_custom::config_custom() noexcept = default;
+config_custom::config_custom(const config_custom&) noexcept = default;
+config_custom::config_custom(config_custom&&) noexcept = default;
+config_custom& config_custom::operator=(const config_custom&) noexcept = default;
+config_custom& config_custom::operator=(config_custom&&) noexcept = default;
 config_custom::~config_custom() = default;
 
 void config_custom::set_log_format(std::string new_log_format) {
@@ -22,4 +26,4 @@ void config_custom::set_log_format_level(std::string new_log_format_level) {
 void config_custom::set_sinks_info(sinks_info new_sinks_info) {
   sinks_info_ = std::move(new_sinks_info);
 }
-}  // namespace hare
+} // namespace hare
