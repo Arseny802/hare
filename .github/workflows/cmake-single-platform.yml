@@ -18,10 +18,12 @@ jobs:
 
     - name: Install Conan
       id: conan
-      uses: turtlebrowser/get-conan@main
-  
-    - name: Conan version
-      run: echo "${{ steps.conan.outputs.version }}"
+      run: |
+        pipx install wheel setuptools
+        pipx install conan --upgrade
+        echo "/home/runner/.local/bin" >> $GITHUB_PATH
+        conan --version
+        echo "version=$(conan --version)" >> $GITHUB_OUTPUT
   
     - name: Download build tools
       run: git clone https://github.com/Arseny802/build_tools.git ${{github.workspace}}/build_tools
@@ -50,7 +52,4 @@ jobs:
 
     - name: Test
       working-directory: ${{github.workspace}}/cmake_build/lin_gcc_x64_rel
-      # Execute tests defined by the CMake configuration.
-      # See https://cmake.org/cmake/help/latest/manual/ctest.1.html for more detail
       run: ctest -C ${{env.BUILD_TYPE}}
-
