@@ -39,7 +39,11 @@ jobs:
       run: git submodule update --init --recursive
 
     - name: Configure CMake
-      run: cmake -B ${{github.workspace}}/cmake_build/lin_gcc_x64_rel -DBUILD_TOOL_TYPE_NAME=lin_gcc_x64_rel  -DCMAKE_TOOLCHAIN_FILE=${{ steps.strings.outputs.cmake_toolchain_file_path }} -DCMAKE_BUILD_TYPE=${{env.BUILD_TYPE}}
+      run: cmake -B ${{github.workspace}}/cmake_build/lin_gcc_x64_rel
+        -DCMAKE_TOOLCHAIN_FILE=${{ steps.strings.outputs.cmake_toolchain_file_path }} 
+        -DCMAKE_BUILD_TYPE=${{env.BUILD_TYPE}}
+        -DBUILD_TOOL_TYPE_NAME=lin_gcc_x64_rel
+        -DCMAKE_POSITION_INDEPENDENT_CODE=ON
 
     - name: Build
       run: cmake --build ${{github.workspace}}/cmake_build/lin_gcc_x64_rel --config ${{env.BUILD_TYPE}}
