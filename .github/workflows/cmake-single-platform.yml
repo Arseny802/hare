@@ -20,7 +20,9 @@ jobs:
       id: conan
       run: |
         pipx ensurepath
+        pipx install conan
         pipx install conan2
+        conan -v
   
     - name: Download build tools
       run: git clone https://github.com/Arseny802/build_tools.git ${{github.workspace}}/build_tools
