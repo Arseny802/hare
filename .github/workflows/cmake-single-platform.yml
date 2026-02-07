@@ -20,8 +20,7 @@ jobs:
       id: conan
       run: |
         pipx ensurepath --force
-        pipx install conan
-        pipx install conan2
+        pip install conan
         conan -v
   
     - name: Download build tools
@@ -40,8 +39,7 @@ jobs:
       shell: bash
       run: |
         cd ${{github.workspace}}/cmake_build/lin_gcc_x64_rel 
-          && echo "cmake_toolchain_file_path=`find ~+ -type f -name "conan_toolchain.cmake"`"
-          >> "$GITHUB_OUTPUT"
+        echo "cmake_toolchain_file_path=`find ~+ -type f -name "conan_toolchain.cmake"`" >> "$GITHUB_OUTPUT"
 
     - name: Git submodule update
       run: git submodule update --init --recursive
