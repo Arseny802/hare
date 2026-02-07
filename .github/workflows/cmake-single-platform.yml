@@ -19,7 +19,7 @@ jobs:
     - name: Install Conan
       id: conan
       run: |
-        pipx ensurepath
+        pipx ensurepath --force
         pipx install conan
         pipx install conan2
         conan -v
