@@ -1,7 +1,7 @@
 #pragma once
 #include "config_defaults_base.h"
 
-#if HARE_ENABLE_STD_FORMAT && __has_include(<format>)
+#if (HARE_ENABLE_STD_FORMAT) && (__has_include(<format>))
 #  include <format>
 #else
 #  include <fmt/format.h>
