@@ -20,7 +20,7 @@ jobs:
       id: conan
       run: |
         pipx ensurepath --force
-        pip install conan
+        pipx install conan
         conan -v
   
     - name: Download build tools
