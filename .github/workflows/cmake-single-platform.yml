@@ -19,6 +19,7 @@ jobs:
     - name: Install Conan
       id: conan
       run: |
+        pipx ensurepath
         pipx install conan
         echo "/home/runner/.local/bin" >> $GITHUB_PATH
   
