@@ -8,12 +8,12 @@ namespace hare {
 namespace {
 constexpr std::string_view default_project_name = "hare";
 constexpr htypes_mask_t default_htypes_mask = htypes_mask::console | htypes_mask::file_daily;
-} // namespace
+}  // namespace
 
-config_default::config_default(std::string project_name, std::string module_name):
-    config(project_name.empty() ? default_project_name.data() : std::move(project_name),
-           default_htypes_mask,
-           get_hlevel_default()) {
+config_default::config_default(std::string project_name, std::string module_name)
+    : config(project_name.empty() ? default_project_name.data() : std::move(project_name),
+             default_htypes_mask,
+             get_hlevel_default()) {
   module_name_ = std::move(module_name);
 
 #ifdef HARE_USE_IMPLEMENTATION_SPDLOG
@@ -77,14 +77,14 @@ std::string config_default::get_default_project_name() {
 
 constexpr hlevels config_default::get_hlevel_default() {
   return
-#ifdef DEBUG // local debug build -> as much as possible log data
-      hlevels::trace;
+#if (defined DEBUG) || (defined _DEBUG)
+      hlevels::trace;  // local debug build -> as much as possible log data
 #else
-#  ifdef RELEASE // prodaction build -> only information for reproducing
-      hlevels::info;
-#  else          // undefined -> anonymus build, not known desired level
-      hlevels::debug;
+#  if (defined RELEASE) || (defined _RELEASE)
+      hlevels::info;  // prodaction build -> only information for reproducing
+#  else
+      hlevels::debug;  // undefined -> anonymus build, not known desired level
 #  endif
 #endif
 }
-} // namespace hare
+}  // namespace hare
