@@ -224,6 +224,15 @@ class hlogger final {
    */
   [[nodiscard]] config_ptr get_config_copy() const;
 
+  /**
+   * Set new logging level to logger instance.
+   * Does nothing if ther is no real instance.
+   * NOT threadsafe.
+   *
+   * @param level The logging level to write.
+   */
+  void set_level(hlevels level) noexcept;
+
  private:
   /**
    * Initializes the logger with its settings.
@@ -250,5 +259,5 @@ class hlogger final {
   std::unique_ptr<logger_pimpl> logger_pimpl_;
 };
 
-using hlogger_ptr = std::shared_ptr<hlogger>; // Defines a shared pointer type alias for the hlogger class.
-} // namespace hare
+using hlogger_ptr = std::shared_ptr<hlogger>;  // Defines a shared pointer type alias for the hlogger class.
+}  // namespace hare

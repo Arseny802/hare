@@ -57,12 +57,12 @@ spdlog::level::level_enum hlevel_to_spdlog_level(const hare::hlevels hare_level)
 #else
 
 #endif
-} // namespace
+}  // namespace
 
 #ifdef HARE_USE_IMPLEMENTATION_SPDLOG
 struct hlogger::logger_pimpl {
-  logger_pimpl(const std::string& logger_name, const std::vector<spdlog::sink_ptr>& sinks):
-      logger(logger_name, begin(sinks), end(sinks)) { }
+  logger_pimpl(const std::string& logger_name, const std::vector<spdlog::sink_ptr>& sinks)
+      : logger(logger_name, begin(sinks), end(sinks)) { }
   ~logger_pimpl() = default;
 
   spdlog::logger logger;
@@ -212,10 +212,19 @@ config_ptr hlogger::get_config_copy() const {
   return config_->clone();
 }
 
+void hlogger::set_level(hlevels level) noexcept {
+#ifdef HARE_USE_IMPLEMENTATION_SPDLOG
+  if (logger_pimpl_) {
+    logger_pimpl_->logger.set_level(hlevel_to_spdlog_level(level));
+  }
+#else
+#endif
+}
+
 bool hlogger::is_level_enabled(hlevels level) const {
   if (level == hlevels::off) {
     return config_->get_level() == hlevels::off;
   }
   return config_->get_level() >= level;
 }
-}; // namespace hare
+};  // namespace hare

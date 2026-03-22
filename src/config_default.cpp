@@ -76,14 +76,18 @@ std::string config_default::get_default_project_name() {
 }
 
 constexpr hlevels config_default::get_hlevel_default() {
-  return
-#if (defined DEBUG) || (defined _DEBUG)
-      hlevels::trace;  // local debug build -> as much as possible log data
+#if defined(GTEST_API_) || defined(UNIT_TEST) || defined(TEST)
+  return hlevels::off;  // logging is off in unit tests
 #else
-#  if (defined RELEASE) || (defined _RELEASE)
-      hlevels::info;  // prodaction build -> only information for reproducing
+  return
+#  if (defined DEBUG) || (defined _DEBUG)
+      hlevels::trace;  // local debug build -> as much as possible log data
 #  else
+#    if (defined RELEASE) || (defined _RELEASE)
+      hlevels::info;  // prodaction build -> only information for reproducing
+#    else
       hlevels::debug;  // undefined -> anonymus build, not known desired level
+#    endif
 #  endif
 #endif
 }
