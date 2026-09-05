@@ -53,6 +53,10 @@ void config_default::set_hlevel(hlevels new_hlevel) {
   logger_min_level_ = new_hlevel;
 }
 
+void config_default::set_log_path(std::string path) {
+  log_path_ = std::move(path);
+}
+
 std::unique_ptr<config> config_default::clone() const {
   return std::make_unique<config_default>(*this);
 }

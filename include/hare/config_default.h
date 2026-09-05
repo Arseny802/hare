@@ -49,6 +49,13 @@ struct config_default: public config {
   void set_hlevel(hlevels new_hlevel) override;
 
   /**
+   * @brief Set the log file path.
+   *
+   * @param path The full path to the log file.
+   */
+  void set_log_path(std::string path) override;
+
+  /**
    * @brief Get a deep copy of this config object.
    *
    * @return A unique pointer to the cloned config object.

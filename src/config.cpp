@@ -7,10 +7,11 @@
 
 namespace hare {
 
-config::config(std::string project_name, htypes_mask_t htypes_mask, hare::hlevels level):
-    project_name_(std::move(project_name)),
-    logger_min_level_(level),
-    htypes_mask_(htypes_mask) { }
+config::config(std::string project_name, htypes_mask_t htypes_mask, hare::hlevels level)
+    : project_name_(std::move(project_name)),
+      logger_min_level_(level),
+      htypes_mask_(htypes_mask),
+      log_path_(std::nullopt) { }
 
 config::~config() = default;
 
@@ -77,6 +78,10 @@ std::optional<std::string> config::get_log_format_level() const {
   return log_format_level_;
 }
 
+std::optional<std::string> config::get_log_path() const {
+  return log_path_;
+}
+
 const sinks_info& config::get_sinks_info() const {
   return sinks_info_;
 }
@@ -109,4 +114,4 @@ bool config::parse_logger_name(const std::string& logger_name, std::string& proj
 
   return true;
 }
-} // namespace hare
+}  // namespace hare

@@ -89,6 +89,10 @@ struct config {
    */
   [[nodiscard]] hlevels get_level() const;
   /**
+   * Retrieves the log file path directory. If not set, returns empty optional.
+   */
+  [[nodiscard]] std::optional<std::string> get_log_path() const;
+  /**
    * This method retrieves the log format that was set during configuration. The
    * log format determines how log messages are formatted for output.
    *
@@ -131,6 +135,12 @@ struct config {
    * @param new_hlevel The new logging level to use.
    */
   virtual void set_hlevel(hlevels new_hlevel) = 0;
+  /**
+   * Sets the directory where with the log file will be created.
+   *
+   * @param path The path to the directory where the log file will be created.
+   */
+  virtual void set_log_path(std::string path) = 0;
 
   /**
    * This method creates a new configuration object that is a deep copy of the
@@ -220,7 +230,16 @@ struct config {
    * @see #get_log_format_level
    */
   std::optional<std::string> log_format_level_;
+  /**
+   * This is a protected member variable representing the log file path (directory).
+   * If set, logs will be written to this path instead of the default
+   * current directory path.
+   *
+   * @see #get_log_path
+   * @see #set_log_path
+   */
+  std::optional<std::string> log_path_;
 };
 
 using config_ptr = config::ptr;
-} // namespace hare
+}  // namespace hare

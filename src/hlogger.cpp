@@ -84,7 +84,22 @@ void hlogger::initialize() {
     return;
   }
 
-  const std::string log_filename = config_->get_project_name() + ".log";
+  std::string log_filename = config_->get_project_name() + ".log";
+  std::string log_dir = config_->get_log_path().value_or({});
+  if (!log_dir.empty()) {
+    const char last_slash =
+#if defined(_WIN32) || defined(_WIN64)
+        '\\';
+#else
+        '/';
+#endif
+    if (log_dir.back() != last_slash) {
+      log_dir += last_slash;
+      log_filename = log_dir + last_slash + log_filename;
+    } else {
+      log_filename = log_dir + log_filename;
+    }
+  }
 
 #ifdef HARE_USE_IMPLEMENTATION_SPDLOG
   config_defaults_spdlog defaults;
